@@ -1,0 +1,13 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/SistemaDeAgendamento/.vs/SistemaDeAgendamento
+/SistemaDeAgendamento/SistemaDeAgendamento.Repositories/bin/Debug/net8.0
+/SistemaDeAgendamento/SistemaDeAgendamento.Repositories/obj
+/SistemaDeAgendamento/SistemaDeAgendamento.Services/bin/Debug/net8.0
+/SistemaDeAgendamento/SistemaDeAgendamento.Services/obj
+/SistemaDeAgendamento/SistemaDeAgendamento.Web/bin/Debug/net8.0
+/SistemaDeAgendamento/SistemaDeAgendamento.Web/obj
+/SistemaDeAgendamento/SistemaDeAgendamento.Web/SistemaDeAgendamento.Web.csproj.user
