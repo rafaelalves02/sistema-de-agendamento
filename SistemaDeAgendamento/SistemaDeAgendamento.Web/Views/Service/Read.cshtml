@@ -1,0 +1,57 @@
+﻿@model SistemaDeAgendamento.Web.Models.Service.ReadViewModel;
+
+<h1>Serviços</h1>
+
+<div class="py-2">
+    <a class="btn btn-primary" asp-controller="Service" asp-action="Create">Novo Serviço</a>
+</div>
+
+@if (Model.Services == null || Model.Services.Count == 0)
+{
+    <p class="card-text">Nenhum serviço cadastrado.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">Preço</th>
+                <th scope="col">Duração</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var service in Model.Services)
+            {
+                var totalMinutes = service.DurationInMinutes;
+                var hours = totalMinutes / 60;
+                var minutes = totalMinutes % 60;
+
+                string formattedDuration;
+                if (hours == 0)
+                {
+                    formattedDuration = $"{minutes}m";
+                }
+                else if (minutes == 0)
+                {
+                    formattedDuration = $"{hours}h";
+                }
+                else
+                {
+                    formattedDuration = $"{hours}h {minutes}m";
+                }
+
+                <tr>
+                    <td>@service.Name</td>
+                    <td>@service.Price.ToString("C")</td>
+                    <td>@formattedDuration</td>
+                    <td>
+                        <a class="btn btn-primary" href="@Url.Action("Edit", "Service", new { id = service.Id })">Editar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}

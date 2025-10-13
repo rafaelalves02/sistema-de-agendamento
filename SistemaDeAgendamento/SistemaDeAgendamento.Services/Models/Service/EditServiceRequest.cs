@@ -4,16 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SistemaDeAgendamento.Repositories.Entities
+namespace SistemaDeAgendamento.Services.Models.Service
 {
-    public class Service
+    public class EditServiceRequest
     {
         public int Id { get; set; }
-
         public required string Name { get; set; }
-
         public required decimal Price { get; set; }
-
-        public required int Duration { get; set; }
+        public int Duration { get; set; }
     }
 }

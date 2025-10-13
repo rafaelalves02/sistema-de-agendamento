@@ -1,7 +1,20 @@
+using SistemaDeAgendamento.Repositories;
+using SistemaDeAgendamento.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Configuration.AddEnvironmentVariables();
+
+builder.Services.AddScoped<IServiceService, ServiceService>();
+
+var connectionString = builder.Configuration.GetConnectionString("SistemaDeAgendamentoConnectionString");
+
+builder.Services.AddScoped<IServiceRepository, ServiceRepository>(c => new ServiceRepository(connectionString!));
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>(c => new AppointmentRepository(connectionString!));
+    
 
 var app = builder.Build();
 

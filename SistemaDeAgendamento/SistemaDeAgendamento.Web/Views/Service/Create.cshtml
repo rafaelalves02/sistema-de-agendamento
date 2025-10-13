@@ -1,0 +1,79 @@
+﻿@model SistemaDeAgendamento.Web.Models.Service.CreateViewModel;
+
+@{
+    ViewData["Title"] = "Novo Serviço - ";
+}
+
+<h1>Novo Serviço</h1>
+
+<form class="row g-3 needs-validation" asp-controller="Service" asp-action="Create" id="serviceForm" novalidate>
+    <div class="col-md-12">
+        <label for="inputName" class="form-label">Nome:</label>
+        <input type="text" class="form-control" id="inputName" asp-for="Name" required>
+    </div>
+    <div class="col-md-6">
+        <label for="inputPrice" class="form-label">Preço:</label>
+        <input type="text" id="preco" class="form-control" placeholder="R$ 0,00" asp-for="Price">
+    </div>
+    <div class="col-6">
+        <label for="inputDuration" class="form-label">Duração(em minutos):</label>
+        <input type="number" class="form-control" id="inputDuratio" asp-for="DurationInMinutes" placeholder="Duração em minutos" required>
+    </div>
+   
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a class="btn btn-secondary" href="@Url.Action("Cancel", "Service")">Cancelar</a>
+    </div>
+
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+</form>
+
+@section Scripts {
+    <script>
+         (() => {
+          'use strict'
+
+          const forms = document.querySelectorAll('.needs-validation')
+
+          Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+              if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+              }
+
+              form.classList.add('was-validated')
+            }, false)
+          })
+        })()
+
+        const inputPreco = document.getElementById('preco');
+        const form = document.getElementById('serviceForm');
+
+        inputPreco.addEventListener('input', e => {
+          let value = e.target.value.replace(/\D/g, '');
+
+          if (value === '') {
+            e.target.value = '';
+            return;
+          }
+
+          value = (parseInt(value, 10) / 100).toFixed(2);
+          value = value
+            .replace('.', ',')
+            .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+          e.target.value = 'R$ ' + value;
+        });
+
+        form.addEventListener('submit', e => {
+          let rawValue = inputPreco.value
+            .replace(/[^\d,]/g, '') 
+            .replace(/\./g, ''); 
+
+          inputPreco.value = rawValue;
+        });
+    </script>
+}
