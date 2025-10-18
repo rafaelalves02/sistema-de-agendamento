@@ -14,7 +14,7 @@ namespace SistemaDeAgendamento.Repositories.Entities
 
         public required int ServiceId { get; set; }
 
-        public required int BarberId { get; set; }
+        public required int EmployeeId { get; set; }
 
         public Status Status { get; set; }
 

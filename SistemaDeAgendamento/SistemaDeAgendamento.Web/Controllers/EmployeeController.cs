@@ -1,27 +1,48 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SistemaDeAgendamento.Services;
-using SistemaDeAgendamento.Services.Models.Service;
+using SistemaDeAgendamento.Services.Models.Employee;
+using SistemaDeAgendamento.Web.Enums;
 using SistemaDeAgendamento.Web.Mappings;
-using SistemaDeAgendamento.Web.Models.Service;
+using SistemaDeAgendamento.Web.Models.Employee;
+using System.Net.WebSockets;
 
 namespace SistemaDeAgendamento.Web.Controllers
 {
-    [Route("service")]
-    public class ServiceController : Controller
+    [Route("employee")]
+    public class EmployeeController : Controller
     {
-        private readonly IServiceService _serviceService;
-
-        public ServiceController(IServiceService serviceService)
+        private readonly IEmployeeService _employeeService;
+        public EmployeeController(IEmployeeService employeeService)
         {
-            _serviceService = serviceService;
+            _employeeService = employeeService;
         }
-        
+
         [Route("create")]
         [Authorize(Roles = "Admin")]
+
         public IActionResult Create()
         {
-            return View();
+            var model = new CreateViewModel
+            {
+                Name = "",
+                Password = "",
+                PhoneNumber = "",
+                UserName = "",
+
+                EmployeeAvailability = Enum.GetValues(typeof(WeekDay))
+                .Cast<WeekDay>()
+                .Select(day => new EmployeeAvailabilityViewModel
+                {
+                    WeekDay = day,
+                    StartTime = new TimeSpan(9, 0, 0),
+                    EndTime = new TimeSpan(18, 0, 0),
+                    IsActive = true
+                })
+                .ToList()
+            };
+
+            return View(model);
         }
 
         [HttpPost("create")]
@@ -34,11 +55,12 @@ namespace SistemaDeAgendamento.Web.Controllers
                 return View(model);
             }
 
-            var result = _serviceService.Create(model.MapToCreateServiceRequest());
+            var result = _employeeService.Create(model.MapToCreateEmployeeRequest());
 
             if (!result.Success)
             {
-                ModelState.AddModelError(string.Empty, result.ErrorMessage ?? "Não foi possível criar o serviço.");
+                ModelState.AddModelError(string.Empty, result.ErrorMessage!);
+
                 return View(model);
             }
 
@@ -46,49 +68,49 @@ namespace SistemaDeAgendamento.Web.Controllers
         }
 
         [Route("Read")]
-        public IActionResult Read(bool? fromHome)
+        [Authorize(Roles = "Admin")]
+        public IActionResult Read()
         {
-            IList<ServiceResult>? services = null;
+            IList<EmployeeResult> employees;
 
-            services = _serviceService.Read();
+            employees = _employeeService.Read();
 
-            var model = new ReadViewModel
-            {
-                Services = services?.Select(c => c.MapToServiceViewModel()).ToList(),
-                ShowWelCome = fromHome
+            var model = new ReadViewModel 
+            { 
+                Employees = employees?.Select(c => c.MapToEmployeeViewModel()).ToList()
             };
 
             return View(model);
         }
 
-        [Route("Edit/{id:int}")]
+        [Route("edit/{id:int}")]
         [Authorize(Roles = "Admin")]
-
         public IActionResult Edit(int id)
         {
-            var service = _serviceService.GetById(id);
+            var employee = _employeeService.GetById(id);
 
-            if (service == null)
+            if (employee == null)
             {
                 return NotFound();
             }
 
-            var model = service.MapToEditViewModel();
+            var model = employee.MapToEditViewModel();
 
             return View(model);
+             
         }
 
         [HttpPost("Edit/{id:int}")]
         [Authorize(Roles = "Admin")]
-
+        
         public IActionResult Edit(EditViewModel model)
         {
             if (!ModelState.IsValid)
-            { 
+            {
                 return View(model);
             }
 
-            var result = _serviceService.Edit(model.MapToEditServiceRequest());
+            var result = _employeeService.Edit(model.MapToEditEmployeeRequest());
 
             if (!result.Success)
             {
@@ -105,7 +127,7 @@ namespace SistemaDeAgendamento.Web.Controllers
 
         public IActionResult Delete(EditViewModel model)
         {
-            var result = _serviceService.Delete(model.Id);
+            var result = _employeeService.Delete(model.Id);
 
             if (!result.Success)
             {

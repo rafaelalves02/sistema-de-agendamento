@@ -1,0 +1,150 @@
+﻿@model SistemaDeAgendamento.Web.Models.Employee.CreateViewModel;
+
+@{
+    ViewData["Title"] = "Novo Funcionário";
+}
+
+<h1>Novo Funcionário</h1>
+
+<form class="row g-3 needs-validation" asp-controller="Employee" asp-action="Create" id="form" novalidate>
+    <div class="col-md-12">
+        <label for="inputName" class="form-label">Nome:</label>
+        <input type="text" class="form-control" id="inputName" asp-for="Name" placeholder="Nome do Funcionário" required>
+    </div>
+    <div class="col-md-6">
+        <label for="inputUserName" class="form-label">Username:</label>
+        <input type="text" id="userName" class="form-control" placeholder="nome para o funcionário fazer login" asp-for="UserName" required>
+    </div>
+    <div class="col-6">
+        <label for="inputPassword" class="form-label">Senha:</label>
+        <input type="password" class="form-control" id="inputPassword" asp-for="Password" placeholder="senha para o funcionário fazer login" required>
+    </div>
+    <div class="col-6">
+        <label for="inputPhoneNumber" class="form-label">Telefone:</label>
+        <input type="text" class="form-control" id="inputPhoneNumber" asp-for="PhoneNumber" placeholder="(61) 9 9999-9999" required>
+    </div>
+    <div class="col-6">
+        <label for="inputEmail" class="form-label">Email(opicional):</label>
+        <input type="email" class="form-control" id="inputEmail" asp-for="Email" placeholder="email do funcionário">
+    </div>
+   
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a class="btn btn-secondary" href="@Url.Action("Cancel", "Employee")">Cancelar</a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white fw-semibold">
+            <h2>Horário de trabalho</h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center shadow-sm border rounded-3">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Dia da semana</th>
+                            <th>Horário de início</th>
+                            <th>Horário de saída</th>
+                            <th>Está trabalhando?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.EmployeeAvailability!.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@Model.EmployeeAvailability[i].WeekDayDisplay</strong>
+                                    <input type="hidden" asp-for="EmployeeAvailability[@i].WeekDay" />
+                                </td>
+                                <td>
+                                    <input asp-for="EmployeeAvailability[@i].StartTime" type="time" class="form-control form-control-sm text-center" required/>
+                                </td>
+                                <td>
+                                    <input asp-for="EmployeeAvailability[@i].EndTime" type="time" class="form-control form-control-sm text-center" required/>
+                                </td>
+                                <td>
+                                    <input asp-for="EmployeeAvailability[@i].IsActive" type="checkbox" class="form-check-input" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <p>esses valores poderão ser editados posteriormente na área de edição de funcionario</p>
+        </div>
+    </div>
+
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+
+</form>
+
+@section Scripts {
+    <script>
+         (() => {
+          'use strict'
+
+          const forms = document.querySelectorAll('.needs-validation')
+
+          Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+              if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+              }
+
+              form.classList.add('was-validated')
+            }, false)
+          })
+        })()
+
+        const phoneInput = document.getElementById('inputPhoneNumber');
+
+        phoneInput.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+
+            if (value.length > 11) value = value.slice(0, 11);
+
+            if (value.length > 2 && value.length <= 7) {
+                value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+            }
+            else if (value.length > 7 && value.length <= 11) {
+                value = `(${value.slice(0, 2)}) ${value.slice(2, 3)} ${value.slice(3, 7)}-${value.slice(7)}`;
+            }
+            else if (value.length > 0 && value.length <= 2) {
+                value = `(${value}`;
+            }
+
+            e.target.value = value;
+        });
+
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function () {
+            const input = document.getElementById('inputPhoneNumber');
+            input.value = input.value.replace(/\D/g, '');
+        });
+
+       document.addEventListener("DOMContentLoaded", () => {
+            const checkboxes = document.querySelectorAll("input[type='checkbox']");
+
+            checkboxes.forEach(chk => {
+                const row = chk.closest("tr");
+
+                const updateRowColor = () => {
+                    if (chk.checked) {
+                        row.classList.remove("table-danger");
+                        row.classList.add("table-success");
+                    } else {
+                        row.classList.remove("table-success");
+                        row.classList.add("table-danger");
+                    }
+                };
+
+                chk.addEventListener("change", updateRowColor);
+
+                updateRowColor();
+            });
+        });
+    </script>
+}

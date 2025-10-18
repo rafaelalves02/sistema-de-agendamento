@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace SistemaDeAgendamento.Repositories.Entities
 {
-    public class Barber
+    public class Employee
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
         public required string Name { get; set; }
         public required string PhoneNumber { get; set; }
-        public required string Email { get; set; }
+        public string? Email { get; set; }
+
+        public User? User { get; set; }
     }
 }

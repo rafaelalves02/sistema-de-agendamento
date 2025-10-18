@@ -12,8 +12,8 @@ namespace SistemaDeAgendamento.Repositories.Entities
 
         public required string UserName { get; set; }
 
-        public required string PasswordHash { get; set; }
+        public required string Password { get; set; }
 
-        public required int RoleId { get; set; }
+        public int RoleId { get; set; }
     }
 }

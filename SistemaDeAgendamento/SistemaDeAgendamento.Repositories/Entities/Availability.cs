@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace SistemaDeAgendamento.Repositories.Entities
 {
@@ -10,13 +9,13 @@ namespace SistemaDeAgendamento.Repositories.Entities
     {
         public int Id { get; set; }
 
-        public int BarberId { get; set; }
+        public int EmployeeId { get; set; }
 
         public WeekDay WeekDay { get; set; }
 
-        public DateTime StartTime { get; set; }
+        public TimeSpan StartTime { get; set; }
 
-        public DateTime EndTime { get; set; }
+        public TimeSpan EndTime { get; set; }
 
         public bool IsActive { get; set; }
     }

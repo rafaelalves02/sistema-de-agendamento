@@ -17,14 +17,14 @@ CREATE TABLE IF NOT EXISTS `sistema_de_agendamento`.`user` (
     REFERENCES `sistema_de_agendamento`.`role` (`role_id`))
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `sistema_de_agendamento`.`barber` (
-  `barber_id` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `sistema_de_agendamento`.`employee` (
+  `employee_id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(100) NOT NULL,
-  `phone_number` INT NOT NULL,
-  `email` VARCHAR(100) NOT NULL,
+  `phone_number` VARCHAR(25) NOT NULL,
+  `email` VARCHAR(100),
   `user_id` INT NOT NULL,
-  PRIMARY KEY (`barber_id`),
-  CONSTRAINT `barber_user`
+  PRIMARY KEY (`employee_id`),
+  CONSTRAINT `employee_user`
     FOREIGN KEY (`user_id`)
     REFERENCES `sistema_de_agendamento`.`user` (`user_id`))
 ENGINE = InnoDB;
@@ -32,14 +32,14 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `sistema_de_agendamento`.`availability` (
   `availability_id` INT NOT NULL AUTO_INCREMENT,
   `weekday` ENUM('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday') NOT NULL,
-  `start_time` DATETIME NOT NULL,
-  `end_time` DATETIME NOT NULL,
-  `is_active` TINYINT NOT NULL,
-  `barber_id` INT NOT NULL,
+  `start_time` TIME,
+  `end_time` TIME,
+  `is_active` TINYINT,
+  `employee_id` INT NOT NULL,
   PRIMARY KEY (`availability_id`),
-  CONSTRAINT `availability_barber`
-    FOREIGN KEY (`barber_id`)
-    REFERENCES `sistema_de_agendamento`.`barber` (`barber_id`))
+  CONSTRAINT `availability_employee`
+    FOREIGN KEY (`employee_id`)
+    REFERENCES `sistema_de_agendamento`.`employee` (`employee_id`))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `sistema_de_agendamento`.`client` (
@@ -66,14 +66,14 @@ CREATE TABLE IF NOT EXISTS `sistema_de_agendamento`.`appointment` (
   `created_at` DATETIME NOT NULL,
   `start_time` DATETIME NOT NULL,
   `end_time` DATETIME NOT NULL,
-  `barber_id` INT NOT NULL,
+  `employee_id` INT NOT NULL,
   PRIMARY KEY (`appointment_id`),
   CONSTRAINT `appointment_client`
     FOREIGN KEY (`client_id`)
     REFERENCES `sistema_de_agendamento`.`client` (`client_id`),
-  CONSTRAINT `appointment_barber`
-    FOREIGN KEY (`barber_id`)
-    REFERENCES `sistema_de_agendamento`.`barber` (`barber_id`),
+  CONSTRAINT `appointment_employee`
+    FOREIGN KEY (`employee_id`)
+    REFERENCES `sistema_de_agendamento`.`employee` (`employee_id`),
   CONSTRAINT `appointment_service`
     FOREIGN KEY (`service_id`)
     REFERENCES `sistema_de_agendamento`.`service` (`service_id`))

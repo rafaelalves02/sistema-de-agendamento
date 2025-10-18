@@ -1,0 +1,54 @@
+﻿@model SistemaDeAgendamento.Web.Models.Employee.ReadViewModel;
+
+@{
+    ViewData["Title"] = "Funcuinários";
+}
+
+<h1>Funcionários</h1>
+
+<div class="py-2">
+    <a class="btn btn-primary" asp-controller="Employee" asp-action="Create">Novo Funcionário</a>
+</div>
+
+@if (Model.Employees == null || Model.Employees.Count == 0)
+{
+    <p class="card-text">Nenhum funcionario cadastrado.</p>
+}
+else
+{
+
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Telefone</th>
+                <th scope="col"><abbr title="Nome para o fucionário fazer login">UserName</abbr></th>
+                <th scope="col">Email</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in Model.Employees)
+            {
+
+                <tr>
+                    <td>@employee.Id</td>
+                    <td>@employee.Name</td>
+                    <td>@employee.PhoneNumber</td>
+                    <td>@employee.UserName</td>
+                    <td>@employee.Email</td>
+                    <td>
+                        <a class="btn btn-primary" href="@Url.Action("Edit", "employee", new { id = employee.Id })">Editar</a>
+                    </td>
+                    @* <td>
+                        <a class="btn btn-secondary" href="@Url.Action("Edit", "Availability", new { id = employee.Id })">Horario de trabalho</a>
+                    </td> *@
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}

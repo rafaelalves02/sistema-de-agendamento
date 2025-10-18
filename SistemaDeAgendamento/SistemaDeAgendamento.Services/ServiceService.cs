@@ -111,11 +111,11 @@ namespace SistemaDeAgendamento.Services
         {
             var result = new DeleteServiceResult();
 
-            var aluno = _serviceRepository.GetById(id);
+            var service = _serviceRepository.GetById(id);
 
-            if (aluno == null)
+            if (service == null)
             {
-                result.ErrorMessage = "Não foi possível encontrar o aluno";
+                result.ErrorMessage = "Não foi possível encontrar o serviço";
 
                 return result;
             }
@@ -124,7 +124,7 @@ namespace SistemaDeAgendamento.Services
 
             if (affectedRows == 0)
             {
-                result.ErrorMessage = "Não foi possível apagar o aluno";
+                result.ErrorMessage = "Não foi possível apagar o srviço";
 
                 return result;
             }
@@ -133,6 +133,6 @@ namespace SistemaDeAgendamento.Services
 
             return result;
         
-    }
+        }
     }
 }

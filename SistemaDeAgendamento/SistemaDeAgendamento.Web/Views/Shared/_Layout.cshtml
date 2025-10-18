@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -7,15 +8,66 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SistemaDeAgendamento.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=cards" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 <body>
     <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">Sistema De Agendamento</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Service" asp-action="Read">Serviços</a>
+                        </li>
+                        @if (@User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Employee" asp-action="Read">Funcionários</a>
+                            </li>    
+                        }
+                        @if (User.IsInRole("Employee"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="" asp-action="">Horários de trabalho</a>
+                            </li>
+                        }       
+                    </ul>
+                    @if (User.Identity!.IsAuthenticated)
+                    {
+                        <form class="d-flex" role="search" asp-controller="User" asp-action="Logout">
+                            <button class="btn btn-outline-light" type="submit">Sair</button>
+                        </form>
+                    }
+
+                    
+                </div>
+            </div>
+        </nav>
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
+        <footer class="d-flex flex-column flex-md-row justify-content-between align-items-center py-3 my-4 border-top">
+            <p class="col-md-4 mb-0 text-body-secondary">&copy; 2025 Sistema de Agendamento</p>
+            <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none" aria-label="Bootstrap">
+                <b>Sistema De Agendamento</b>
+            </a>
+            <ul class="nav col-md-4 justify-content-end">
+                @if (!User.Identity!.IsAuthenticated)
+                {
+                    <li class="nav-item"><a class="nav-link px-2 text-body-secondary" asp-controller="User" asp-action="Login">Acesso Restrito</a></li>            
+                }
+            </ul>
+        </footer>
     </div>
+    
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

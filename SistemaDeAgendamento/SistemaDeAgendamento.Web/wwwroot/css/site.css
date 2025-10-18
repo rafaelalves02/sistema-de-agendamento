@@ -1,0 +1,8 @@
+body {
+    padding-top: 80px;
+}
+
+.table tbody tr:hover {
+    background-color: #f5f9ff;
+    transition: background-color 0.2s ease-in-out;
+}

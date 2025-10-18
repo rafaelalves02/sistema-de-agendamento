@@ -3,6 +3,8 @@
     public class ReadViewModel
     {
         public IList<ServiceViewModel>? Services { get; set; }
+
+        public bool? ShowWelCome { get; set; }
     }
 
     public class ServiceViewModel
