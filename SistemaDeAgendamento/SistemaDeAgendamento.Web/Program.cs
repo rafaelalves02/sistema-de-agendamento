@@ -21,9 +21,12 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+
 
 var connectionString = builder.Configuration.GetConnectionString("SistemaDeAgendamentoConnectionString");
 
+builder.Services.AddScoped<IClientRepository, ClientRepository>(c => new ClientRepository(connectionString!));
 builder.Services.AddScoped<IAvailabilityRepository, AvailabilityRepository>(c => new AvailabilityRepository(connectionString!));
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(c => new EmployeeRepository(connectionString!));
 builder.Services.AddScoped<IUserRepository,UserRepository>(c => new UserRepository(connectionString!));

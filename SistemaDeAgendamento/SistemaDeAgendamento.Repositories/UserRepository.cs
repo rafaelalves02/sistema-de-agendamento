@@ -1,5 +1,4 @@
-﻿using EnglishNow.Repositories;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using SistemaDeAgendamento.Repositories.Entities;
 using System;
 using System.Collections.Generic;
@@ -16,6 +15,8 @@ namespace SistemaDeAgendamento.Repositories
         int? Insert(User user);
 
         int? Update(User user);
+
+        int? Delete(int id);
     }
 
     public class UserRepository : BaseRepository, IUserRepository
@@ -23,6 +24,7 @@ namespace SistemaDeAgendamento.Repositories
         public UserRepository(string connectionString) : base(connectionString)
         {
         }
+
 
         public User? GetByUserName(string username)
         {
@@ -97,6 +99,22 @@ namespace SistemaDeAgendamento.Repositories
             }
 
             return Affectedrows;
+        }
+        public int? Delete(int id)
+        {
+            int? affectedRows = null;
+
+            using (var conn = new MySqlConnection(ConnectionString))
+            {
+                string query = "DELETE FROM user WHERE user_id = @user_id";
+                var cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("user_id", id);
+
+                conn.Open();
+                affectedRows = cmd.ExecuteNonQuery();
+            }
+
+            return affectedRows;
         }
     }
 }

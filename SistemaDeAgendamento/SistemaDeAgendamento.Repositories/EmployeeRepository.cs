@@ -1,5 +1,4 @@
-﻿using EnglishNow.Repositories;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using SistemaDeAgendamento.Repositories.Entities;
 using System;
 using System.Collections.Generic;
@@ -20,6 +19,8 @@ namespace SistemaDeAgendamento.Repositories
         int? Delete(int id);
 
         Employee? GetById(int id);
+
+        Employee? GetByUserId(int userId);
     }
 
     public class EmployeeRepository : BaseRepository, IEmployeeRepository
@@ -158,5 +159,41 @@ namespace SistemaDeAgendamento.Repositories
             return employee;
         }
 
+        public Employee? GetByUserId(int userId)
+        {
+            Employee? employee = null;
+
+            using (var conn = new MySqlConnection(ConnectionString))
+            {
+                var query = "SELECT e.employee_id, e.name, e.phone_number, e.email, u.user_id, u.username, u.password FROM employee e INNER JOIN user u ON e.user_id = u.user_id WHERE u.user_id = @userId";
+
+                var cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("userId", userId);
+
+                conn.Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        employee = new Employee
+                        {
+                            Id = reader.GetInt32("employee_id"),
+                            Name = reader.GetString("name"),
+                            PhoneNumber = reader.GetString("phone_number"),
+                            Email = reader.GetStringOrNull("email"),
+                            User = new User
+                            {
+                                Id = reader.GetInt32("user_id"),
+                                UserName = reader.GetString("username"),
+                                Password = reader.GetString("password"),
+                            }
+                        };
+                    }
+                }
+            }
+
+            return employee;
+        }
     }
 }

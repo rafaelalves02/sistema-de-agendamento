@@ -22,12 +22,12 @@ namespace SistemaDeAgendamento.Repositories.Entities
 
     public enum WeekDay
     {
-        Monday,
-        Tuesday,
-        Wednesday,
-        Thursday,
-        Friday,
-        Saturday,
-        Sunday
+        monday,
+        tuesday,
+        wednesday,
+        thursday,
+        friday,
+        saturday,
+        sunday
     }
 }

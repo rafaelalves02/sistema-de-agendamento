@@ -1,11 +1,12 @@
 ﻿using SistemaDeAgendamento.Services.Models.Service;
+using SistemaDeAgendamento.Web.Models.Appointment;
 using SistemaDeAgendamento.Web.Models.Service;
 
 namespace SistemaDeAgendamento.Web.Mappings
 {
     public static class ServiceMapping
     {
-        public static CreateServiceRequest MapToCreateServiceRequest(this CreateViewModel model)
+        public static CreateServiceRequest MapToCreateServiceRequest(this SistemaDeAgendamento.Web.Models.Service.CreateViewModel model)
         {
             return new CreateServiceRequest
             {
@@ -45,6 +46,17 @@ namespace SistemaDeAgendamento.Web.Mappings
                 Name = model.Name,
                 Price = model.Price,
                 Duration = model.Duration
+            };
+        }
+
+        public static AppointmentServiceViewModel MapToAppointmentServiceViewModel(this ServiceResult result)
+        {
+            return new AppointmentServiceViewModel
+            {
+                Id = result.Id,
+                Name = result.Name,
+                Price = result.Price,
+                Duration = result.Duration
             };
         }
     }

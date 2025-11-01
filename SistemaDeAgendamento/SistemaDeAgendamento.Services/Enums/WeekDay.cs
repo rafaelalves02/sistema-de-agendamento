@@ -1,14 +1,14 @@
-﻿namespace SistemaDeAgendamento.Web.Enums
+﻿namespace SistemaDeAgendamento.Services.Enums
 {
     public enum WeekDay
     {
+        Sunday,
         Monday,
         Tuesday,
         Wednesday,
         Thursday,
         Friday,
-        Saturday,
-        Sunday
+        Saturday
     }
 }
 

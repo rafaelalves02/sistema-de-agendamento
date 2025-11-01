@@ -46,7 +46,6 @@ CREATE TABLE IF NOT EXISTS `sistema_de_agendamento`.`client` (
   `client_id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(100) NOT NULL,
   `phone_number` VARCHAR(25) NOT NULL,
-  `password` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`client_id`))
 ENGINE = InnoDB;
 

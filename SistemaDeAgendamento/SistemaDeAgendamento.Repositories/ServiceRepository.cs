@@ -1,5 +1,4 @@
-﻿using EnglishNow.Repositories;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using SistemaDeAgendamento.Repositories.Entities;
 using System;
 using System.Collections.Generic;

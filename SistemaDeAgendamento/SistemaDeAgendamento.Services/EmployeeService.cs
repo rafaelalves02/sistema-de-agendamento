@@ -1,5 +1,6 @@
 ﻿using MySqlX.XDevAPI.Common;
 using SistemaDeAgendamento.Repositories;
+using SistemaDeAgendamento.Repositories.Entities;
 using SistemaDeAgendamento.Services.Mappings;
 using SistemaDeAgendamento.Services.Models.Employee;
 using System;
@@ -19,6 +20,8 @@ namespace SistemaDeAgendamento.Services
         EditEmployeeResult Edit(EditEmployeeRequest request);
 
         EmployeeResult? GetById(int id); 
+
+        EmployeeResult? GetByUserId(int userId);
 
         DeleteEmployeeResult Delete(int id);    
     }
@@ -71,7 +74,14 @@ namespace SistemaDeAgendamento.Services
                 return result;
             }
 
-            var availabilityId = _availabilityRepository.Insert(employeeId.Value);//fazer rota da lista de availability até aq, se fudeukkkk
+            var availabilityId = _availabilityRepository.Insert(AvailabilityMapping.MapToAvailability(request.EmployeeAvailability, (int)employeeId));
+
+            if (!availabilityId.HasValue)
+            {
+                result.ErrorMessage = "Erro ao inserir os horarios do funcionario";
+
+                return result;
+            }
 
             result.Success = true;
 
@@ -128,11 +138,29 @@ namespace SistemaDeAgendamento.Services
                 return result;
             }
 
-            var affectedRows = _employeeRepository.Delete(id);
+            var affectedRows = _availabilityRepository.DeleteByEmployeeId(employee.Id);
 
             if (affectedRows == 0)
             {
-                result.ErrorMessage = "Não foi possível apagar o srviço";
+                result.ErrorMessage = "Não foi possível apagar os horarios do funcionario";
+
+                return result;
+            }
+
+            affectedRows = _employeeRepository.Delete(id);
+
+            if (affectedRows == 0)
+            {
+                result.ErrorMessage = "Não foi possível apagar o funcionário";
+
+                return result;
+            }
+
+            affectedRows = _userRepository.Delete(employee.User!.Id);
+
+            if (affectedRows == 0)
+            {
+                result.ErrorMessage = "Não foi possível apagar o usuário do funcionário";
 
                 return result;
             }
@@ -151,9 +179,47 @@ namespace SistemaDeAgendamento.Services
                 return null;
             }
 
-            return employee.MapToEmployeeResult();
+            var availability = _availabilityRepository.GetByEmployeeId(id);
+
+            if (availability == null || availability.Count == 0)
+            {
+                var defaultAvailabilities = Enum.GetValues(typeof(WeekDay))
+                    .Cast<WeekDay>()
+                    .Select(day => new Availability
+                    {
+                        EmployeeId = id,
+                        WeekDay = day,
+                        StartTime = new TimeSpan(9, 0, 0),
+                        EndTime = new TimeSpan(18, 0, 0),
+                        IsActive = true
+                    })
+                    .ToList();
+
+                var NewAvailability = _availabilityRepository.Insert(defaultAvailabilities);
+
+                availability = _availabilityRepository.GetByEmployeeId(id);
+            }
+
+            var employeeAvailability = employee.MapToEmployeeResult(availability);
+
+            return employeeAvailability;
         }
 
+        public EmployeeResult? GetByUserId(int userId)
+        {
+            var employee = _employeeRepository.GetByUserId(userId);
+
+            if (employee == null)
+            {
+                return null;
+            }
+
+            var availability = _availabilityRepository.GetByEmployeeId(employee.Id);
+
+            var employeeAvailability = employee.MapToEmployeeResult(availability);
+
+            return employeeAvailability;
+        }
         public IList<EmployeeResult> Read()
         {
             var employees = _employeeRepository.Read();
@@ -162,5 +228,6 @@ namespace SistemaDeAgendamento.Services
 
             return result;
         }
+
     }
 }

@@ -21,5 +21,7 @@ namespace SistemaDeAgendamento.Services.Models.Employee
         public required string UserName { get; set; }
 
         public string? Password { get; set; }
+
+        public IList<EmployeeAvailability>? EmployeeAvailability { get; set; }
     }
 }

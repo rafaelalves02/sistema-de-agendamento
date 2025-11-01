@@ -33,9 +33,9 @@
                         @if (User.IsInRole("Employee"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="" asp-action="">Horários de trabalho</a>
+                                <a class="nav-link" asp-controller="Employee" asp-action="Read">Informações Pessoais</a>
                             </li>
-                        }       
+                        }
                     </ul>
                     @if (User.Identity!.IsAuthenticated)
                     {

@@ -8,14 +8,22 @@ namespace SistemaDeAgendamento.Web.Mappings
         public static CreateEmployeeRequest MapToCreateEmployeeRequest(this CreateViewModel model)
         {
             return new CreateEmployeeRequest
-            { 
+            {
                 UserName = model.UserName,
                 Password = model.Password,
                 Email = model.Email,
                 Name = model.Name,
-                PhoneNumber = model.PhoneNumber
+                PhoneNumber = model.PhoneNumber,
+                EmployeeAvailability = model.EmployeeAvailability
+                    .Select(vm => new EmployeeAvailability
+                    {
+                        WeekDay = (Services.Enums.WeekDay)vm.WeekDay,
+                        StartTime = vm.StartTime,   
+                        EndTime = vm.EndTime,
+                        IsActive = vm.IsActive,
+                    })
+                    .ToList()
             };
-
         }
 
         public static EmployeeViewModel MapToEmployeeViewModel(this EmployeeResult result)
@@ -33,17 +41,25 @@ namespace SistemaDeAgendamento.Web.Mappings
 
         public static EditViewModel MapToEditViewModel(this EmployeeResult result)
         {
-            return new EditViewModel 
-            { 
+            return new EditViewModel
+            {
                 Id = result.Id,
                 UserId = result.UserId,
                 Name = result.Name,
                 Email = result.Email,
                 Password = result.Password!,
                 PhoneNumber = result.PhoneNumber,
-                UserName = result.UserName
+                UserName = result.UserName,
+                EmployeeAvailability = (result.EmployeeAvailability ?? new List<EmployeeAvailability>())
+                    .Select(a => new EditEmployeeAvailabilityViewModel
+                    {
+                        WeekDay = (Web.Enums.WeekDay)a.WeekDay,
+                        StartTime = a.StartTime,
+                        EndTime = a.EndTime,
+                        IsActive = a.IsActive
+                    })
+                    .ToList()
             };
-
         }
 
         public static EditEmployeeRequest MapToEditEmployeeRequest(this EditViewModel model)
@@ -57,6 +73,26 @@ namespace SistemaDeAgendamento.Web.Mappings
                 Email = model.Email,
                 UserName = model.UserName,
                 Password = model.Password
+            };
+        }
+
+        public static ReadViewModel MapToReadViewModel(this EmployeeResult result)
+        {
+            return new ReadViewModel
+            {
+                Employees = new List<EmployeeViewModel>
+                {
+                    result.MapToEmployeeViewModel()
+                },
+                EmployeeAvailability = (result.EmployeeAvailability ?? new List<EmployeeAvailability>())
+                    .Select(a => new ReadEmployeeAvailabilityViewModel
+                    {
+                        WeekDay = (Web.Enums.WeekDay)a.WeekDay,
+                        StartTime = a.StartTime,
+                        EndTime = a.EndTime,
+                        IsActive = a.IsActive
+                    })
+                    .ToList()
             };
         }
     }

@@ -67,18 +67,40 @@ namespace SistemaDeAgendamento.Web.Controllers
             return RedirectToAction("Read");
         }
 
+
         [Route("Read")]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public IActionResult Read()
         {
             IList<EmployeeResult> employees;
 
-            employees = _employeeService.Read();
-
-            var model = new ReadViewModel 
-            { 
-                Employees = employees?.Select(c => c.MapToEmployeeViewModel()).ToList()
+            var model = new ReadViewModel
+            {
+                Employees = null,
+                EmployeeAvailability = new List<ReadEmployeeAvailabilityViewModel>()
             };
+
+            if (User.IsInRole("Admin"))
+            {
+                employees = _employeeService.Read();
+
+                model.Employees = employees?.Select(c => c.MapToEmployeeViewModel()).ToList();
+            }
+            else if (User.IsInRole("Employee"))
+            {
+                var userIdString = User.FindFirst("Id")?.Value;
+
+                int userId = int.Parse(userIdString!);
+
+                var employee = _employeeService.GetByUserId(userId);
+
+                if (employee == null)
+                {
+                    return View(model);
+                }
+
+                model = employee.MapToReadViewModel();
+            }
 
             return View(model);
         }

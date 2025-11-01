@@ -1,14 +1,30 @@
 ﻿@model SistemaDeAgendamento.Web.Models.Employee.ReadViewModel;
 
 @{
-    ViewData["Title"] = "Funcuinários";
+    @if (User.IsInRole("Admin"))
+    {
+        ViewData["Title"] = "Funcuinários";
+    }
+    else
+    {
+        ViewData["Title"] = "Informações Pessoais";
+    }
 }
 
-<h1>Funcionários</h1>
 
-<div class="py-2">
-    <a class="btn btn-primary" asp-controller="Employee" asp-action="Create">Novo Funcionário</a>
-</div>
+@if (User.IsInRole("Admin"))
+{
+    <h1>Funcionários</h1>
+
+    <div class="py-2">
+        <a class="btn btn-primary" asp-controller="Employee" asp-action="Create">Novo Funcionário</a>
+    </div>
+}
+else
+{
+    <h1>Informações Pessoais</h1>
+}
+
 
 @if (Model.Employees == null || Model.Employees.Count == 0)
 {
@@ -26,8 +42,10 @@ else
                 <th scope="col">Telefone</th>
                 <th scope="col"><abbr title="Nome para o fucionário fazer login">UserName</abbr></th>
                 <th scope="col">Email</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
+                @if (User.IsInRole("Admin"))
+                {
+                    <th scope="col"></th>
+                }          
             </tr>
         </thead>
         <tbody>
@@ -40,15 +58,83 @@ else
                     <td>@employee.PhoneNumber</td>
                     <td>@employee.UserName</td>
                     <td>@employee.Email</td>
-                    <td>
-                        <a class="btn btn-primary" href="@Url.Action("Edit", "employee", new { id = employee.Id })">Editar</a>
-                    </td>
-                    @* <td>
-                        <a class="btn btn-secondary" href="@Url.Action("Edit", "Availability", new { id = employee.Id })">Horario de trabalho</a>
-                    </td> *@
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td>
+                            <a class="btn btn-primary" href="@Url.Action("Edit", "employee", new { id = employee.Id })">Editar</a>
+                        </td>
+                    }
                 </tr>
             }
         </tbody>
     </table>
+}
 
+@if (User.IsInRole("Employee"))
+{
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white fw-semibold">
+            <h2>Horário de trabalho</h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center shadow-sm border rounded-3">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Dia da semana</th>
+                            <th>Horário de início</th>
+                            <th>Horário de saída</th>
+                            <th>Está trabalhando?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.EmployeeAvailability!.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@Model.EmployeeAvailability[i].WeekDayDisplay</strong>
+                                    <input type="hidden" asp-for="EmployeeAvailability[@i].WeekDay" />
+                                </td>
+                                <td>
+                                    <input asp-for="EmployeeAvailability[@i].StartTime" type="time" class="form-control form-control-sm text-center"  disabled="disabled"/>
+                                </td>
+                                <td>
+                                    <input asp-for="EmployeeAvailability[@i].EndTime" type="time" class="form-control form-control-sm text-center" disabled="disabled" />
+                                </td>
+                                <td>
+                                    <input asp-for="EmployeeAvailability[@i].IsActive" type="checkbox" disabled="disabled" class="form-check-input" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const checkboxes = document.querySelectorAll("input[type='checkbox']");
+
+            checkboxes.forEach(chk => {
+                const row = chk.closest("tr");
+
+                const updateRowColor = () => {
+                    if (chk.checked) {
+                        row.classList.remove("table-danger");
+                        row.classList.add("table-success");
+                    } else {
+                        row.classList.remove("table-success");
+                        row.classList.add("table-danger");
+                    }
+                };
+
+                chk.addEventListener("change", updateRowColor);
+
+                updateRowColor();
+            });
+        });
+    </script>
 }

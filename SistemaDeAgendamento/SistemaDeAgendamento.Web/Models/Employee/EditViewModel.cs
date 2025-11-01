@@ -1,4 +1,5 @@
 ﻿using SistemaDeAgendamento.Web.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace SistemaDeAgendamento.Web.Models.Employee
 {
@@ -16,15 +17,17 @@ namespace SistemaDeAgendamento.Web.Models.Employee
 
         public required string Password { get; set; }
 
-        public IList<EditEmployeeAvailabilityViewModel>? EmployeeAvailability { get; set; }
+        public required IList<EditEmployeeAvailabilityViewModel> EmployeeAvailability { get; set; }
     }
 
     public class EditEmployeeAvailabilityViewModel 
     {
         public required WeekDay WeekDay { get; set; }
 
+        [Required(ErrorMessage = "Informe o horário de início.")]
         public required TimeSpan StartTime { get; set; }
 
+        [Required(ErrorMessage = "Informe o horário de saída.")]
         public required TimeSpan EndTime { get; set; }
 
         public bool IsActive { get; set; }

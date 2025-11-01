@@ -26,6 +26,29 @@ namespace SistemaDeAgendamento.Services.Mappings
             };
         }
 
+        public static EmployeeResult MapToEmployeeResult(this Employee employee, IList<Availability>? availabilities)
+        {
+            return new EmployeeResult
+            {
+                Id = employee.Id,
+                UserId = employee.User!.Id,
+                Name = employee.Name,
+                PhoneNumber = employee.PhoneNumber,
+                Email = employee.Email,
+                UserName = employee.User.UserName,
+                Password = employee.User.Password,
+                EmployeeAvailability = availabilities?
+                    .Select(a => new EmployeeAvailability
+                    {
+                        WeekDay = (Services.Enums.WeekDay)a.WeekDay,
+                        StartTime = a.StartTime,
+                        EndTime = a.EndTime,
+                        IsActive = a.IsActive
+                    })
+                    .ToList()
+            };
+        }
+
         public static EmployeeResult MapToEmployeeResult(this Employee entity)
         {
             return new EmployeeResult

@@ -8,7 +8,7 @@ namespace SistemaDeAgendamento.Repositories.Entities
 {
     public class Appointment
     {
-        public required int Id { get; set; }
+        public int Id { get; set; }
 
         public required int ClientId { get; set; }
 

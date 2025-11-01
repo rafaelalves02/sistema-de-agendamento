@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EnglishNow.Repositories
+namespace SistemaDeAgendamento.Repositories
 {
     public class BaseRepository
     {
