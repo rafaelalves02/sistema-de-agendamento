@@ -23,6 +23,12 @@ namespace SistemaDeAgendamento.Repositories.Entities
         public required DateTime EndTime { get; set; }
 
         public required DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public Client? Client { get; set; }
+
+        public Service? Service { get; set; }
+
+        public Employee? Employee { get; set; }
     }
 
     public enum Status

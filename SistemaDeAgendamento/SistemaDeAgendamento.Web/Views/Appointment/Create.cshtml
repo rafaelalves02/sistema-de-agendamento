@@ -24,6 +24,9 @@
     <div class="col-6">
         <label for="inputPhoneNumber" class="form-label">Telefone(Whatsapp):</label>
         <input type="text" class="form-control" id="inputPhoneNumber" asp-for="Client.PhoneNumber" placeholder="(61) 9 9999-9999" required>
+        <div class="invalid-feedback">
+            Digite um número de telefone válido com 11 dígitos.
+        </div>  
     </div>
 
     <div class="col-6">
@@ -121,11 +124,24 @@
                     const name = nameInput.value.trim();
                     const parts = name.split(/\s+/);
                     const isFullName = parts.length >= 2 && parts.every(p => p.length > 1);
+                    const phoneInput = document.getElementById('inputPhoneNumber');
+                    const phoneDigits = phoneInput.value.replace(/\D/g, '');
+                    const isValidPhone = phoneDigits.length === 11;
+
+                    if (!isValidPhone) {
+                        phoneInput.classList.add('is-invalid');
+                        event.preventDefault();
+                        event.stopPropagation();
+                        closeModal();
+                    } else {
+                        phoneInput.classList.remove('is-invalid');
+                    }
 
                     if (!isFullName) {
                         nameInput.classList.add('is-invalid');
                         event.preventDefault();
                         event.stopPropagation();
+                        closeModal();
                     } else {
                         nameInput.classList.remove('is-invalid');
                     }
@@ -133,8 +149,6 @@
                     if (!form.checkValidity()) {
                         event.preventDefault();
                         event.stopPropagation();
-                        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmationModal'));
-                        modal.hide();
                         showInvalidInformationAlert();
                     }
 
@@ -422,6 +436,11 @@
                 }
             });
         });
+
+        function closeModal(){
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('confirmationModal'));
+            modal.hide();
+        }
 
     </script>
     <style>

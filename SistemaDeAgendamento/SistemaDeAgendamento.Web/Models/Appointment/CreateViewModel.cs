@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace SistemaDeAgendamento.Web.Models.Appointment
 {
@@ -37,11 +38,26 @@ namespace SistemaDeAgendamento.Web.Models.Appointment
         public IList<DayAvailablityViewModel>? AvailableDays { get; set; }
     }
 
-    public class CreateClientViewModel
+    public class CreateClientViewModel : IValidatableObject
     {
         public string? Name { get; set; }
 
         public string? PhoneNumber { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (!string.IsNullOrWhiteSpace(PhoneNumber))
+            {
+                var digits = new string(PhoneNumber.Where(char.IsDigit).ToArray());
+                if (digits.Length < 11)
+                {
+                    yield return new ValidationResult(
+                        "Por favor informe um telefone com pelo menos 11 dígitos.",
+                        new[] { nameof(PhoneNumber) }
+                    );
+                }
+            }
+        }
     }
 
     public class AppointmentServiceViewModel

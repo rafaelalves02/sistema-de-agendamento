@@ -1,5 +1,7 @@
 ﻿using SistemaDeAgendamento.Repositories.Entities;
 using SistemaDeAgendamento.Services.Models.Appointment;
+using SistemaDeAgendamento.Services.Models.Employee;
+using SistemaDeAgendamento.Services.Models.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +23,38 @@ namespace SistemaDeAgendamento.Services.Mappings
                 Status = Status.Scheduled,
                 CreatedAt = DateTime.Now,
                 ClientId = clientId,
+            };
+        }
+
+        public static AppointmentResult MapToAppointmentResult(this Appointment appointment)
+        {
+            return new AppointmentResult
+            {
+                Id = appointment.Id,
+                Client = new ClientResult
+                {
+                    Id = appointment.Client!.Id,
+                    Name = appointment.Client!.Name,
+                    PhoneNumber = appointment.Client.PhoneNumber
+                },
+                Service = new ServiceResult
+                {
+                    Id = appointment.Service!.Id,
+                    Name = appointment.Service!.Name,
+                    Price = appointment.Service.Price,
+                    Duration = appointment.Service.Duration
+                },
+                Employee = new EmployeeResult
+                {
+                    Id = appointment.Employee!.Id,
+                    Name = appointment.Employee!.Name,
+                    PhoneNumber = appointment.Employee.PhoneNumber,
+                    Email = appointment.Employee.Email,           
+                },
+                Status = (AppointmentStatus)appointment.Status,
+                StartTime = appointment.StartTime,
+                EndTime = appointment.EndTime,
+                CreatedAt = appointment.CreatedAt
             };
         }
     }

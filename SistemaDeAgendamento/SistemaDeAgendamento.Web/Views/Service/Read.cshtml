@@ -126,3 +126,31 @@ else
         }
     </div>
 }
+
+<div id="successToast" class="alert alert-success position-fixed bottom-0 end-0 m-3 fade" role="alert" style="z-index: -1;" aria-live="polite">
+    Agendamento realizado com sucesso!
+</div>
+
+
+@section Scripts {
+    <script>
+        function showToast(id) {
+            const toast = document.getElementById(id);
+            toast.classList.add("show");
+            toast.style.zIndex = "9999";
+            setTimeout(() => {
+                toast.classList.remove("show");
+                toast.style.zIndex = "-1";
+            }, 5000);
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("success") === "True") {
+                showToast("successToast");
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
+            }
+        });
+    </script>
+}

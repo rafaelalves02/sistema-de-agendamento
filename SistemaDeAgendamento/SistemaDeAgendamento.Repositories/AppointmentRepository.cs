@@ -12,6 +12,12 @@ namespace SistemaDeAgendamento.Repositories
     {
         int? Insert(Appointment appointment);
 
+        IList<Appointment> Read();
+
+        IList<Appointment> GetByEmployeeId(int employeeId);
+
+        IList<Appointment> GetByClientPhoneNumber(string phoneNumber);
+
         IList<Appointment> GetAppointmentsByEmployeeAndDate(int employeeId, DateTime date);
     }
 
@@ -49,6 +55,232 @@ namespace SistemaDeAgendamento.Repositories
             }
 
             return appointmentId;
+        }
+
+        public IList<Appointment> Read()
+        {
+            var result = new List<Appointment>();
+
+            using (var conn = new MySqlConnection(ConnectionString))
+            {
+                var query = @"
+                    SELECT 
+                        a.appointment_id,
+                        a.client_id,
+                        a.service_id,
+                        a.employee_id,
+                        a.status,
+                        a.start_time,
+                        a.end_time,
+                        a.created_at,
+                        c.name AS client_name,
+                        c.phone_number AS client_phone,
+                        s.name AS service_name,
+                        s.price AS service_price,
+                        s.duration AS service_duration,
+                        e.name AS employee_name,
+                        e.phone_number AS employee_phone
+                    FROM appointment a
+                    JOIN client c ON a.client_id = c.client_id
+                    JOIN service s ON a.service_id = s.service_id
+                    JOIN employee e ON a.employee_id = e.employee_id
+                    ORDER BY a.start_time DESC";
+
+                var cmd = new MySqlCommand(query, conn);
+
+                conn.Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new Appointment
+                        {
+                            Id = reader.GetInt32("appointment_id"),
+                            ClientId = reader.GetInt32("client_id"),
+                            ServiceId = reader.GetInt32("service_id"),
+                            EmployeeId = reader.GetInt32("employee_id"),
+                            Status = (Status)Enum.Parse(typeof(Status), reader.GetString("status"), true),
+                            StartTime = reader.GetDateTime("start_time"),
+                            EndTime = reader.GetDateTime("end_time"),
+                            CreatedAt = reader.GetDateTime("created_at"),
+                            Client = new Client
+                            {
+                                Id = reader.GetInt32("client_id"),
+                                Name = reader.GetString("client_name"),
+                                PhoneNumber = reader.GetString("client_phone")
+                            },
+                            Service = new Service
+                            {
+                                Id = reader.GetInt32("service_id"),
+                                Name = reader.GetString("service_name"),
+                                Price = reader.GetDecimal("service_price"),
+                                Duration = reader.GetInt32("service_duration")
+                            },
+                            Employee = new Employee
+                            {
+                                Id = reader.GetInt32("employee_id"),
+                                Name = reader.GetString("employee_name"),
+                                PhoneNumber = reader.GetString("employee_phone")
+                            }
+                        });
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public IList<Appointment> GetByEmployeeId(int employeeId)
+        {
+            var result = new List<Appointment>();
+
+            using (var conn = new MySqlConnection(ConnectionString))
+            {
+                var query = @"
+                    SELECT 
+                        a.appointment_id,
+                        a.client_id,
+                        a.service_id,
+                        a.employee_id,
+                        a.status,
+                        a.start_time,
+                        a.end_time,
+                        a.created_at,
+                        c.name AS client_name,
+                        c.phone_number AS client_phone,
+                        s.name AS service_name,
+                        s.price AS service_price,
+                        s.duration AS service_duration,
+                        e.name AS employee_name,
+                        e.phone_number AS employee_phone
+                    FROM appointment a
+                    INNER JOIN client c ON a.client_id = c.client_id
+                    INNER JOIN service s ON a.service_id = s.service_id
+                    INNER JOIN employee e ON a.employee_id = e.employee_id
+                    WHERE a.employee_id = @employeeId
+                    ORDER BY a.start_time DESC";
+
+                var cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("employeeId", employeeId);
+
+                conn.Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new Appointment
+                        {
+                            Id = reader.GetInt32("appointment_id"),
+                            ClientId = reader.GetInt32("client_id"),
+                            ServiceId = reader.GetInt32("service_id"),
+                            EmployeeId = reader.GetInt32("employee_id"),
+                            Status = (Status)Enum.Parse(typeof(Status), reader.GetString("status"), true),
+                            StartTime = reader.GetDateTime("start_time"),
+                            EndTime = reader.GetDateTime("end_time"),
+                            CreatedAt = reader.GetDateTime("created_at"),
+                            Client = new Client
+                            {
+                                Id = reader.GetInt32("client_id"),
+                                Name = reader.GetString("client_name"),
+                                PhoneNumber = reader.GetString("client_phone")
+                            },
+                            Service = new Service
+                            {
+                                Id = reader.GetInt32("service_id"),
+                                Name = reader.GetString("service_name"),
+                                Price = reader.GetDecimal("service_price"),
+                                Duration = reader.GetInt32("service_duration")
+                            },
+                            Employee = new Employee
+                            {
+                                Id = reader.GetInt32("employee_id"),
+                                Name = reader.GetString("employee_name"),
+                                PhoneNumber = reader.GetString("employee_phone")
+                            }
+                        });
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public IList<Appointment> GetByClientPhoneNumber(string phoneNumber)
+        {
+            var result = new List<Appointment>();
+
+            using (var conn = new MySqlConnection(ConnectionString))
+            {
+                var query = @"
+                    SELECT 
+                        a.appointment_id,
+                        a.client_id,
+                        a.service_id,
+                        a.employee_id,
+                        a.status,
+                        a.start_time,
+                        a.end_time,
+                        a.created_at,
+                        c.name AS client_name,
+                        c.phone_number AS client_phone,
+                        s.name AS service_name,
+                        s.price AS service_price,
+                        s.duration AS service_duration,
+                        e.name AS employee_name,
+                        e.phone_number AS employee_phone
+                    FROM appointment a
+                    INNER JOIN client c ON a.client_id = c.client_id
+                    INNER JOIN service s ON a.service_id = s.service_id
+                    INNER JOIN employee e ON a.employee_id = e.employee_id
+                    WHERE c.phone_number = @phoneNumber
+                    ORDER BY a.start_time DESC";
+
+                var cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("phoneNumber", phoneNumber);
+
+                conn.Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new Appointment
+                        {
+                            Id = reader.GetInt32("appointment_id"),
+                            ClientId = reader.GetInt32("client_id"),
+                            ServiceId = reader.GetInt32("service_id"),
+                            EmployeeId = reader.GetInt32("employee_id"),
+                            Status = (Status)Enum.Parse(typeof(Status), reader.GetString("status"), true),
+                            StartTime = reader.GetDateTime("start_time"),
+                            EndTime = reader.GetDateTime("end_time"),
+                            CreatedAt = reader.GetDateTime("created_at"),
+                            Client = new Client
+                            {
+                                Id = reader.GetInt32("client_id"),
+                                Name = reader.GetString("client_name"),
+                                PhoneNumber = reader.GetString("client_phone")
+                            },
+                            Service = new Service
+                            {
+                                Id = reader.GetInt32("service_id"),
+                                Name = reader.GetString("service_name"),
+                                Price = reader.GetDecimal("service_price"),
+                                Duration = reader.GetInt32("service_duration")
+                            },
+                            Employee = new Employee
+                            {
+                                Id = reader.GetInt32("employee_id"),
+                                Name = reader.GetString("employee_name"),
+                                PhoneNumber = reader.GetString("employee_phone")
+                            }
+                        });
+                    }
+                }
+            }
+
+            return result;
         }
 
         public IList<Appointment> GetAppointmentsByEmployeeAndDate(int employeeId, DateTime date)

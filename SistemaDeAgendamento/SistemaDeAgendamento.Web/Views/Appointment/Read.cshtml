@@ -1,0 +1,293 @@
+﻿@using System.Text.RegularExpressions
+@using System
+@using System.Linq
+@using SistemaDeAgendamento.Web.Models.Appointment
+@model SistemaDeAgendamento.Web.Models.Appointment.ReadViewModel
+
+@{
+    ViewData["Title"] = "Agendamentos";
+
+    string formattedClientPhone;
+    try
+    {
+        var digits = Model.ClientPhoneNumber ?? string.Empty;
+
+        if (digits.Length == 11)
+        {
+            formattedClientPhone = Regex.Replace(digits, @"(\d{2})(\d{1})(\d{4})(\d{4})", "($1) $2 $3-$4");
+        }
+        else
+        {
+            formattedClientPhone = digits;
+        }
+    }
+    catch
+    {
+        formattedClientPhone = Model.ClientPhoneNumber ?? string.Empty;
+    }
+}
+
+<style>
+    .filter-card {
+        border: 1px solid rgba(0,0,0,.05);
+        background: #fff;
+        padding: 1rem;
+        border-radius: .5rem;
+        box-shadow: 0 1px 2px rgba(0,0,0,.03);
+    }
+
+    .appointment-card {
+        border: 1px solid rgba(0,0,0,.05);
+        transition: transform .12s ease, box-shadow .12s ease;
+        border-radius: .6rem;
+        overflow: hidden;
+    }
+
+    .appointment-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 30px rgba(13, 110, 253, .08);
+    }
+
+    .appointment-card .card-body {
+        padding: 1rem;
+    }
+
+    .status-badge {
+        font-weight: 600;
+        box-shadow: 0 3px 10px rgba(0,0,0,.06);
+    }
+
+    .appointment-meta {
+        font-size: .9rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        border: 1px dashed rgba(0,0,0,.06);
+        border-radius: .5rem;
+        background: linear-gradient(180deg, rgba(248,249,250,0.8), rgba(255,255,255,0.4));
+    }
+
+    .card-price {
+        font-weight: 600;
+        color: #0d6efd;
+    }
+
+    .small-muted {
+        color: #6c757d;
+        font-size: .9rem;
+    }
+
+    .table thead th {
+        border-bottom: 2px solid rgba(0,0,0,.04);
+    }
+
+    .status-cell .badge {
+        min-width: 88px;
+        display: inline-block;
+        text-align: center;
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="h4 m-0">Agendamentos</h1>
+    </div>
+    <div>
+        <a class="btn btn-primary" href="@Url.Action("GetClientPhone", "Appointment")">Procurar por outro Número</a>
+    </div>
+</div>
+
+<div class="filter-card mb-4">
+    <form method="get" asp-action="Read" asp-controller="Appointment" class="row g-2 align-items-end">
+        <div class="col-md-3 col-sm-6">
+            <h2 class="h6 mb-2">Filtro</h2>
+            <label asp-for="Date" class="form-label small mb-1">Data</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                <input asp-for="Date" type="date" class="form-control" />
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <label asp-for="ServiceId" class="form-label small mb-1">Serviço</label>
+            <select asp-for="ServiceId" class="form-select">
+                <option value="">Todos</option>
+                @if (Model?.Services != null)
+                {
+                    foreach (var s in Model.Services)
+                    {
+                        var isSelected = s.Value == Model.ServiceId?.ToString();
+                        <option value="@s.Value" selected="@(isSelected ? "selected" : null)">@s.Text</option>
+                    }
+                }
+            </select>
+        </div>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="col-md-2 col-sm-5">
+                <label asp-for="EmployeeId" class="form-label small mb-1">Funcionário</label>
+                <select asp-for="EmployeeId" class="form-select">
+                    <option value="">Todos</option>
+                    @if (Model?.Employees != null)
+                    {
+                        foreach (var e in Model.Employees)
+                        {
+                            var isSelected = e.Value == Model.EmployeeId?.ToString();
+                            <option value="@e.Value" selected="@(isSelected ? "selected" : null)">@e.Text</option>
+                        }
+                    }
+                </select>
+            </div>
+        }
+
+        <div class="col-md-1 col-sm-5">
+            <label class="form-label small mb-1">Status</label>
+            <select name="Status" class="form-select">
+                <option value="">Todos</option>
+                @{
+                    var enumType = typeof(AppointmentStatusViewModel);
+                    foreach (var value in Enum.GetValues(enumType).Cast<AppointmentStatusViewModel>())
+                    {
+                        var val = value.ToString();
+                        var isSelected = Model!.Status.HasValue && Model.Status.Value == value;
+                        var text = value == AppointmentStatusViewModel.Scheduled ? "Pendente"
+                        : value == AppointmentStatusViewModel.Completed ? "Finalizado"
+                        : "Cancelado";
+                        <option value="@val" selected="@(isSelected ? "selected" : null)">@text</option>
+                    }
+                }
+            </select>
+        </div>
+
+        @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+        {
+            <div class="col-md-2 col-sm-6">
+                <label asp-for="ClientPhoneNumber" class="form-label small mb-1">Telefone do Cliente</label>
+                <input asp-for="ClientPhoneNumber" type="tel" class="form-control" placeholder="(00) 00000-0000" />
+            </div>
+        }
+
+        <div class="col-md-12 d-flex gap-2 mt-1">
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <a class="btn btn-outline-secondary" href="@Url.Action("Read", "Appointment")">Limpar</a>
+            <div class="ms-auto text-muted align-self-center">
+                @if (Model?.Appointments != null)
+                {
+                    <small>@Model.Appointments.Count() item(s) encontrados</small>
+                }
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (!User.IsInRole("Admin") && !User.IsInRole("Employee"))
+{
+    <h2 class="h6 mb-3">resultados para o Número: <span class="text-primary">@formattedClientPhone</span></h2>
+}
+
+@if (Model?.Appointments == null || !Model.Appointments.Any())
+{
+    <div class="empty-state">
+        <i class="bi bi-calendar-x" style="font-size:2.5rem;color:#adb5bd"></i>
+        <p class="mt-3 mb-0 small-muted">Nenhum agendamento encontrado com os filtros selecionados.</p>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+                    {
+                        <th scope="col">Cliente</th>
+                    }
+                    <th scope="col">Serviço</th>
+                    <th scope="col">Funcionário</th>
+                    <th scope="col">Data</th>
+                    <th scope="col" class="text-nowrap">Início/Fim</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" class="text-nowrap">Criado em</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model.Appointments)
+                {
+                    var totalMinutes = a.Service.Duration;
+
+                    var hours = totalMinutes / 60;
+
+                    var minutes = totalMinutes % 60;
+
+                    string formattedDuration;
+
+                    if (hours == 0) formattedDuration = $"{minutes} min";
+
+                    else if (minutes == 0) formattedDuration = $"{hours} h";
+
+                    else formattedDuration = $"{hours} h {minutes} min";
+
+
+                    string formattedPhone;
+                    try
+                    {
+                        formattedPhone = Regex.Replace(a.Client.PhoneNumber ?? string.Empty, @"(\d{2})(\d{1})(\d{4})(\d{4})", "($1) $2 $3-$4");
+                        if (string.IsNullOrWhiteSpace(formattedPhone))
+                        {
+                            formattedPhone = a.Client.PhoneNumber!;
+                        }
+                    }
+                    catch
+                    {
+                        formattedPhone = a.Client.PhoneNumber!;
+                    }
+
+                    var status = a.Status.ToString();
+                    var badgeClass = status == "Completed" ? "bg-success"
+                                   : status == "Scheduled" ? "bg-warning text-dark"
+                                   : status == "Canceled" ? "bg-danger"
+                                   : "bg-secondary";
+                <tr>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+                    {
+                        <td>
+                            <div class="fw-semibold">@a.Client.Name</div>
+                            <div class="text-muted small">@formattedPhone</div>
+                        </td>
+                    }                      
+                    <td>
+                        <div>@a.Service.Name</div>
+                        <div class="text-muted small">@formattedDuration • <span class="card-price">@a.Service.Price.ToString("C")</span></div>
+                    </td>
+                    <td>@a.Employee.Name</td>
+                    <td class="text-nowrap">@a.StartTime.ToString("dd/MM/yyyy")</td>
+                    <td class="text-nowrap">@a.StartTime.ToString("HH:mm") - @a.EndTime.ToString("HH:mm")</td>
+                    <td class="status-cell">
+                        <span class="badge status-badge @badgeClass">
+                            @(a.Status == SistemaDeAgendamento.Web.Models.Appointment.AppointmentStatusViewModel.Completed ? "Finalizado"
+                                : a.Status == SistemaDeAgendamento.Web.Models.Appointment.AppointmentStatusViewModel.Scheduled ? "Pendente"
+                                : "Cancelado")
+                        </span>
+                    </td>
+                    <td class="text-nowrap"><small class="text-muted">@a.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small></td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        (function () {
+            document.querySelectorAll('input[type="tel"]').forEach(function (el) {
+                el.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') el.value = '';
+                });
+            });
+        })();
+    </script>
+}

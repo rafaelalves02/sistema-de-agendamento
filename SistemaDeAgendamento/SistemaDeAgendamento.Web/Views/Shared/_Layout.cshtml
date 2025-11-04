@@ -15,37 +15,52 @@
     <header>
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">Sistema De Agendamento</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Service" asp-action="Read">Serviços</a>
-                        </li>
-                        @if (@User.IsInRole("Admin"))
-                        {
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">Sistema De Agendamento</a> 
+                @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+                {
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarCollapse">
+                        <ul class="navbar-nav me-auto mb-2 mb-md-0">
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Employee" asp-action="Read">Funcionários</a>
-                            </li>    
-                        }
-                        @if (User.IsInRole("Employee"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Employee" asp-action="Read">Informações Pessoais</a>
+                                <a class="nav-link" asp-controller="Service" asp-action="Read">Serviços</a>
                             </li>
-                        }
-                    </ul>
-                    @if (User.Identity!.IsAuthenticated)
-                    {
-                        <form class="d-flex" role="search" asp-controller="User" asp-action="Logout">
-                            <button class="btn btn-outline-light" type="submit">Sair</button>
-                        </form>
-                    }
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Employee" asp-action="Read">Funcionários</a>
+                                </li>
+                            }
+                            @if (User.IsInRole("Employee"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Employee" asp-action="Read">Informações Pessoais</a>
+                                </li>
+                            }
+                            @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Appointment" asp-action="Read">Agendamentos</a>
+                                </li>
+                            }
 
-                    
-                </div>
+                        </ul>
+                        @if (User.Identity!.IsAuthenticated)
+                        {
+                            <form class="d-flex" role="search" asp-controller="User" asp-action="Logout">
+                                <button class="btn btn-outline-light" type="submit">Sair</button>
+                            </form>
+                        }
+                    </div>
+                }
+                
+                @if (!User.IsInRole("Admin") && !User.IsInRole("Employee"))
+                {
+                    <form class="d-flex ms-1" role="search" asp-controller="Appointment" asp-action="Read">
+                        <button class="btn btn-outline-light" type="submit">Meus Agendamentos</button>
+                    </form>
+                }
             </div>
         </nav>
 
@@ -54,6 +69,7 @@
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
+
         <footer class="d-flex flex-column flex-md-row justify-content-between align-items-center py-3 my-4 border-top">
             <p class="col-md-4 mb-0 text-body-secondary">&copy; 2025 Sistema de Agendamento</p>
             <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none" aria-label="Bootstrap">

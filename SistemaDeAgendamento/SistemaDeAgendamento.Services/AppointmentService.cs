@@ -11,9 +11,16 @@ namespace SistemaDeAgendamento.Services
 {
     public interface IAppointmentService
     {
+        IList<TimeSpan> GetAvailableSlots(int employeeId, DateTime date, int serviceDuration);
+
         CreateAppointmentResult Create(CreateAppointmentRequest request);
 
-        IList<TimeSpan> GetAvailableSlots(int employeeId, DateTime date, int serviceDuration);
+        IList<AppointmentResult> Read();
+
+        IList<AppointmentResult> GetByEmployeeId(int employeeId);
+
+        IList<AppointmentResult> GetByClientPhoneNumber(string phoneNumber);
+            
     }
 
 
@@ -69,6 +76,7 @@ namespace SistemaDeAgendamento.Services
 
             return availableSlots;
         }
+
 
         public CreateAppointmentResult Create(CreateAppointmentRequest request)
         {
@@ -150,5 +158,38 @@ namespace SistemaDeAgendamento.Services
 
             return result;
         }
+        public IList<AppointmentResult> Read()
+        {
+            var result = new List<AppointmentResult>();
+
+            var appointments = _appointmentRepository.Read();
+
+            result = appointments.Select(a => a.MapToAppointmentResult()).ToList();
+
+            return result;
+        }
+
+        public IList<AppointmentResult> GetByEmployeeId(int employeeId)
+        {
+            var result = new List<AppointmentResult>();
+
+            var appointments = _appointmentRepository.GetByEmployeeId(employeeId);
+
+            result = appointments.Select(a => a.MapToAppointmentResult()).ToList();
+
+            return result;
+        }
+
+        public IList<AppointmentResult> GetByClientPhoneNumber(string phoneNumber)
+        {
+            var result = new List<AppointmentResult>();
+
+            var appointments = _appointmentRepository.GetByClientPhoneNumber(phoneNumber);
+
+            result = appointments.Select(a => a.MapToAppointmentResult()).ToList();
+
+            return result;
+        }
     }
 }
+

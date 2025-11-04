@@ -16,9 +16,9 @@ namespace SistemaDeAgendamento.Web.Mappings
             };
         }
 
-        public static ServiceViewModel MapToServiceViewModel(this ServiceResult serviceResult)
+        public static SistemaDeAgendamento.Web.Models.Service.ServiceViewModel MapToServiceViewModel(this ServiceResult serviceResult)
         {
-            return new ServiceViewModel
+            return new SistemaDeAgendamento.Web.Models.Service.ServiceViewModel
             {
                 Id = serviceResult.Id,
                 Name = serviceResult.Name,
