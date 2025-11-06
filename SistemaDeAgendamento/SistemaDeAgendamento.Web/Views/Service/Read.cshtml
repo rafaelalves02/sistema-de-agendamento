@@ -24,7 +24,7 @@
     </div>
 }
 
-<h3 class="h1 text-center mt-5 mb-3 text- fw-semibold">Serviços</h3>
+<h3 class="h2 text-center mt-5 mb-3 text- fw-semibold">Escolha um serviço para agendar:</h3>
 
 
 @if (@User.IsInRole("Admin"))
@@ -119,7 +119,7 @@ else
                                 <i class="bi bi-clock me-1"></i>@formattedDuration
                             </span> 
                         </div>
-                        <a href="@Url.Action("Create", "Appointment", new { id = service.Id })" class="btn btn-primary btn-sm w-100">Agendar</a>
+                        <a href="@Url.Action("Create", "Appointment", new { id = service.Id })" class="btn btn-primary btn-sm w-100"><i class="bi bi-calendar4 me-1"></i>Agendar</a>
                     </div>
                 </div>
             </div>

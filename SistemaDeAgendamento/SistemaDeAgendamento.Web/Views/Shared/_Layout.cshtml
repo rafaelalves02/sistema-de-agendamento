@@ -59,7 +59,8 @@
                 @if (!User.IsInRole("Admin") && !User.IsInRole("Employee"))
                 {
                     <form class="d-flex" role="search" asp-controller="Appointment" asp-action="Read">
-                        <button class="btn btn-outline-light" type="submit">Meus Agendamentos</button>
+
+                        <button class="btn btn-outline-light" type="submit"><i class="bi bi-calendar-check me-1"></i>Meus Agendamentos</button>
                     </form>
                 }
             </div>

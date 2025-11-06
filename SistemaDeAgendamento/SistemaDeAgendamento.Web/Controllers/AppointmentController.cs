@@ -108,8 +108,6 @@ namespace SistemaDeAgendamento.Web.Controllers
                 }
 
                 model.Employees = GetEmployeeList();
-
-                model.Services = GetServiceList();
              
             }
             else if (User.IsInRole("Employee"))
@@ -183,6 +181,8 @@ namespace SistemaDeAgendamento.Web.Controllers
             {
                 appointments = appointments.Where(a => a.Status == model.Status.Value).ToList();
             }
+
+            model.Services = GetServiceList();
 
             model.Appointments = appointments;
 

@@ -78,6 +78,8 @@ CREATE TABLE IF NOT EXISTS `sistema_de_agendamento`.`appointment` (
     REFERENCES `sistema_de_agendamento`.`service` (`service_id`))
 ENGINE = InnoDB;
 
+-- selecione o db antes de rodar esse ultimos comandos
+
 INSERT INTO role (name) VALUES ('admin'), ('employee');
 
-INSERT INTO user (username, password, role_id) VALUES ('admin', 'admin123', 1);
+INSERT INTO user (username, password, role_id) VALUES ('admin', '123', 1);

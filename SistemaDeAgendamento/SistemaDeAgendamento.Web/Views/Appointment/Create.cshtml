@@ -7,7 +7,7 @@
 
 
 <h1>Novo Agendamento</h1>
-<h2 class="mt-4 mb-5">Serviço escolhido: <span class="text-primary">@Model.Service.Name</span></h2>
+<h2 class="mt-3 mb-5 text-secondary">Serviço escolhido: <span class="text-primary">@Model.Service.Name</span></h2>
 
 <form class="row g-3 needs-validation" asp-controller="Appointment" asp-action="Create" id="form" novalidate>
 
@@ -31,7 +31,9 @@
 
     <div class="col-6">
         <label for="inputEmployee" class="form-label">Selecione o profissional:</label>
-        <select class="form-control" id="inputEmployee" asp-items="Model.Employees" asp-for="EmployeeId" required></select>
+        <select class="form-select" id="inputEmployee" asp-items="Model.Employees" asp-for="EmployeeId" required>
+            <option>Clique aqui para selecionar um profissional</option>
+        </select>
     </div>
 
     <div class="container-fluid mt-4 p-0">
