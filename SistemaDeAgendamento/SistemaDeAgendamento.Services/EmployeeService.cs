@@ -31,7 +31,11 @@ namespace SistemaDeAgendamento.Services
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IUserRepository _userRepository;
         private readonly IAvailabilityRepository _availabilityRepository;
-        public EmployeeService(IEmployeeRepository employeeRepository, IUserRepository userRepository, IAvailabilityRepository availabilityRepository)
+        public EmployeeService(
+            IEmployeeRepository employeeRepository,
+            IUserRepository userRepository,
+            IAvailabilityRepository availabilityRepository
+        )
         {
             _employeeRepository = employeeRepository;
             _userRepository = userRepository;
@@ -74,7 +78,11 @@ namespace SistemaDeAgendamento.Services
                 return result;
             }
 
-            var availabilityId = _availabilityRepository.Insert(AvailabilityMapping.MapToAvailability(request.EmployeeAvailability, (int)employeeId));
+            var availabilities = request.EmployeeAvailability
+                .Select(a => a.MapToAvailability((int)employeeId))
+                .ToList();
+
+            var availabilityId = _availabilityRepository.Insert(availabilities);
 
             if (!availabilityId.HasValue)
             {
@@ -117,6 +125,18 @@ namespace SistemaDeAgendamento.Services
             {
                 result.ErrorMessage = "Não foi possível atualizar o usuário";
 
+                return result;
+            }
+
+            var availabilities = request.EmployeeAvailability
+                .Select(a => a.MapToAvailability(request.Id))
+                .ToList();
+
+            affectedRows = _availabilityRepository.Update(availabilities);
+
+            if (affectedRows == 0)
+            {
+                result.ErrorMessage = "Não foi possível atualizar a disponibilidade do funcionário";
                 return result;
             }
 

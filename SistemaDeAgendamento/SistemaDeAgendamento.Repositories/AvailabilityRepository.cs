@@ -12,6 +12,8 @@ namespace SistemaDeAgendamento.Repositories
     {
         int? Insert(IList<Availability> availabilities);
 
+        int? Update(IList<Availability> availabilities);
+
         IList<Availability> GetByEmployeeId(int employeeId);
 
         int? DeleteByEmployeeId(int employeeId);
@@ -56,6 +58,34 @@ namespace SistemaDeAgendamento.Repositories
                 }
             }
             return availabilityId;
+        }
+
+        public int? Update(IList<Availability> availabilities)
+        {
+            int? AffectedRows = 0;
+
+            using (var conn = new MySqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                foreach (var availability in availabilities)
+                {
+                    var query = "UPDATE availability SET start_time = @start_time, end_time = @end_time, is_active = @is_active, weekday = @weekday WHERE availability_id = @availability_id";
+
+                    var cmd = new MySqlCommand(query, conn);
+
+                    cmd.Parameters.AddWithValue("@availability_id", availability.Id);
+                    cmd.Parameters.AddWithValue("@start_time", availability.StartTime);
+                    cmd.Parameters.AddWithValue("@end_time", availability.EndTime);
+                    cmd.Parameters.AddWithValue("@is_active", availability.IsActive);
+                    cmd.Parameters.AddWithValue("@weekday", availability.WeekDay.ToString());
+
+                    AffectedRows += cmd.ExecuteNonQuery();
+                }
+            }
+
+            return AffectedRows;
+
         }
 
         public IList<Availability> GetByEmployeeId(int employeeId)
@@ -157,6 +187,5 @@ namespace SistemaDeAgendamento.Repositories
 
             return result;
         }
-
     }
 }

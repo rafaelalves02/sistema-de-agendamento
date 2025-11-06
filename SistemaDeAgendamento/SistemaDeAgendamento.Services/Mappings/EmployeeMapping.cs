@@ -1,4 +1,5 @@
 ﻿using SistemaDeAgendamento.Repositories.Entities;
+using SistemaDeAgendamento.Services.Enums;
 using SistemaDeAgendamento.Services.Models.Employee;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,7 @@ namespace SistemaDeAgendamento.Services.Mappings
                 EmployeeAvailability = availabilities?
                     .Select(a => new EmployeeAvailability
                     {
+                        Id = a.Id,
                         WeekDay = (Services.Enums.WeekDay)a.WeekDay,
                         StartTime = a.StartTime,
                         EndTime = a.EndTime,
@@ -77,6 +79,26 @@ namespace SistemaDeAgendamento.Services.Mappings
                     UserName = request.UserName,
                     Password = request.Password!
                 }
+            };
+        }
+
+        public static User MapToUser(this CreateEmployeeRequest request)
+        {
+            return new User
+            {
+                UserName = request.UserName,
+                Password = request.Password,
+                RoleId = (int)Role.Employee
+            };
+        }
+
+        public static User MapToUser(this EditEmployeeRequest request)
+        {
+            return new User
+            {
+                Id = request.UserId,
+                UserName = request.UserName,
+                Password = request.Password!
             };
         }
     }

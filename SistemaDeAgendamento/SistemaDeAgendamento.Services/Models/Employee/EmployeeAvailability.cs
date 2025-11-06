@@ -9,6 +9,7 @@ namespace SistemaDeAgendamento.Services.Models.Employee
 {
     public class EmployeeAvailability
     {
+        public int Id { get; set; }
         public required WeekDay WeekDay { get; set; }
 
         public required TimeSpan StartTime { get; set; }

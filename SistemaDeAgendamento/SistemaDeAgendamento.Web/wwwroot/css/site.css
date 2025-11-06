@@ -1,8 +1,42 @@
+* {
+    font-family: 'Poppins', 'Inter', sans-serif;
+}
+
 body {
     padding-top: 80px;
+    background-color: #F9FAFB;
+}
+
+.navbar {
+    background-color: #0A58CA;
 }
 
 .table tbody tr:hover {
     background-color: #f5f9ff;
     transition: background-color 0.2s ease-in-out;
 }
+
+@media (max-width: 676px){
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+}
+
+/*.btn-primary {
+    background-color: #000 !important;
+    border-color: #000 !important;
+}
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+        background-color: #222 !important;
+        border-color: #222 !important;
+    }
+
+.text-primary {
+    color: #000 !important;
+}
+
+.bg-primary {
+    background-color: #000 !important;
+}*/

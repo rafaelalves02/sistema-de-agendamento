@@ -33,7 +33,7 @@ namespace SistemaDeAgendamento.Web.Mappings
                 Id = result.Id,
                 UserId = result.UserId,
                 Name = result.Name,
-                UserName = result.UserName,
+                UserName = result.UserName!,
                 PhoneNumber= result.PhoneNumber,
                 Email = result.Email
             };
@@ -49,10 +49,11 @@ namespace SistemaDeAgendamento.Web.Mappings
                 Email = result.Email,
                 Password = result.Password!,
                 PhoneNumber = result.PhoneNumber,
-                UserName = result.UserName,
+                UserName = result.UserName!,
                 EmployeeAvailability = (result.EmployeeAvailability ?? new List<EmployeeAvailability>())
                     .Select(a => new EditEmployeeAvailabilityViewModel
                     {
+                        Id = a.Id,
                         WeekDay = (Web.Enums.WeekDay)a.WeekDay,
                         StartTime = a.StartTime,
                         EndTime = a.EndTime,
@@ -72,7 +73,17 @@ namespace SistemaDeAgendamento.Web.Mappings
                 PhoneNumber = model.PhoneNumber,
                 Email = model.Email,
                 UserName = model.UserName,
-                Password = model.Password
+                Password = model.Password,
+                EmployeeAvailability = model.EmployeeAvailability
+                    .Select(vm => new EmployeeAvailability
+                    {
+                        Id = vm.Id,
+                        WeekDay = (Services.Enums.WeekDay)vm.WeekDay,
+                        StartTime = vm.StartTime,
+                        EndTime = vm.EndTime,
+                        IsActive = vm.IsActive,
+                    })
+                    .ToList()
             };
         }
 

@@ -17,20 +17,20 @@
         }
         else
         {
-            <h2>ao sistema de Agendamento</h2>
+            <h2 class="h3 text-secondary">ao sistema de Agendamento</h2>
         }
 
        
     </div>
 }
 
-<h1 class="text-center mt-5 mb-3">Serviços</h1>
+<h3 class="h1 text-center mt-5 mb-3 text- fw-semibold">Serviços</h3>
 
 
 @if (@User.IsInRole("Admin"))
 {
     <div class="py-2">
-        <a class="btn btn-primary" asp-controller="Service" asp-action="Create">Novo Serviço</a>
+        <a class="btn btn-primary mb-3" asp-controller="Service" asp-action="Create">Novo Serviço</a>
     </div>
 }
 
@@ -109,17 +109,17 @@ else
                 formattedDuration = $"{hours}h {minutes}min";
             }
 
-            <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card-container col-md-4 col-sm-6 mb-4">
                 <div class="card shadow-sm h-100 border-0">
                     <div class="card-body">
-                        <h5 class="card-title fw-semibold text-dark">@service.Name</h5>
+                        <h5 class="card-title fw-semibold text-dark text-uppercase">@service.Name</h5>
                         <div class="d-flex justify-content-between text-muted mt-2 mb-3">
-                            <span><i class="bi bi-cash-coin me-1"></i>@service.Price.ToString("C")</span>
-                            <span>
+                            <span class="text-success price-span"><i class="bi bi-cash-coin me-1"></i>@service.Price.ToString("C")</span>
+                            <span class="text-primary time-span">
                                 <i class="bi bi-clock me-1"></i>@formattedDuration
                             </span> 
                         </div>
-                        <a href="@Url.Action("Create", "Appointment", new { id = service.Id })" class="btn btn-primary w-100">Agendar</a>
+                        <a href="@Url.Action("Create", "Appointment", new { id = service.Id })" class="btn btn-primary btn-sm w-100">Agendar</a>
                     </div>
                 </div>
             </div>
@@ -153,4 +153,8 @@ else
             }
         });
     </script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Service/Read.css"/>
 }

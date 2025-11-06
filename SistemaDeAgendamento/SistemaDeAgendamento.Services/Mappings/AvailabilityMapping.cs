@@ -10,19 +10,17 @@ namespace SistemaDeAgendamento.Services.Mappings
 {
     public static class AvailabilityMapping
     {
-        public static IList<Availability> MapToAvailability(IList<EmployeeAvailability> request, int employeeId)
+        public static Availability MapToAvailability(this EmployeeAvailability availability, int employeeId)
         {
-            if (request == null)
-                return new List<Availability>();
-
-            return request.Select(ea => new Availability
+            return new Availability
             {
+                Id = availability.Id,
                 EmployeeId = employeeId,
-                WeekDay = (WeekDay)ea.WeekDay,
-                StartTime = ea.StartTime,
-                EndTime = ea.EndTime,
-                IsActive = ea.IsActive
-            }).ToList();
+                WeekDay = (Repositories.Entities.WeekDay)availability.WeekDay,
+                StartTime = availability.StartTime,
+                EndTime = availability.EndTime,
+                IsActive = availability.IsActive
+            };
         }
     }
 }

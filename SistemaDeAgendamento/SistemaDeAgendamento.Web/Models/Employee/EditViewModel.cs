@@ -22,6 +22,7 @@ namespace SistemaDeAgendamento.Web.Models.Employee
 
     public class EditEmployeeAvailabilityViewModel 
     {
+        public int Id { get; set; }
         public required WeekDay WeekDay { get; set; }
 
         [Required(ErrorMessage = "Informe o horário de início.")]

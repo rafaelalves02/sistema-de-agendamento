@@ -21,27 +21,5 @@ namespace SistemaDeAgendamento.Services.Mappings
                 Role = (Role)user.RoleId
             };
         }
-
-        //employee
-
-        public static User MapToUser(this CreateEmployeeRequest request)
-        {
-            return new User
-            {
-                UserName = request.UserName,
-                Password = request.Password,
-                RoleId = (int)Role.Employee
-            };
-        }
-
-        public static User MapToUser(this EditEmployeeRequest request)
-        {
-            return new User
-            {
-                Id = request.UserId,
-                UserName = request.UserName,
-                Password = request.Password!
-            };
-        }
     }
 }
