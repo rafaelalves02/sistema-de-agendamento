@@ -4,7 +4,6 @@ using SistemaDeAgendamento.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 builder.Services
@@ -24,12 +23,11 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 
 // Configuração do banco de dados
-// DatabaseProvider pode estar no appsettings.json (não é informação sensível)
 var databaseProvider = builder.Configuration["DatabaseProvider"]?.ToLower() ?? "mysql";
 
 // Connection strings devem ser configuradas via variáveis de ambiente por segurança
-var mysqlConnectionString = Environment.GetEnvironmentVariable("SISTEMA_AGENDAMENTO_MYSQL_CONNECTION_STRING");
-var sqlServerConnectionString = Environment.GetEnvironmentVariable("SISTEMA_AGENDAMENTO_SQLSERVER_CONNECTION_STRING");
+var mysqlConnectionString = builder.Configuration.GetConnectionString("SistemaDeAgendamentoMySQLConnectionString"); 
+var sqlServerConnectionString = builder.Configuration.GetConnectionString("SistemaDeAgendamentoSQLServerConnectionString");
 
 // Registrar repositórios baseado no DatabaseProvider
 if (databaseProvider == "sqlserver")
@@ -40,6 +38,7 @@ if (databaseProvider == "sqlserver")
             "ConnectionString para SQL Server não configurada. " +
             "Configure a variável de ambiente 'SISTEMA_AGENDAMENTO_SQLSERVER_CONNECTION_STRING'");
     }
+
 
     builder.Services.AddScoped<IClientRepository, ClientRepositorySqlServer>(c => new ClientRepositorySqlServer(sqlServerConnectionString));
     builder.Services.AddScoped<IAvailabilityRepository, AvailabilityRepositorySqlServer>(c => new AvailabilityRepositorySqlServer(sqlServerConnectionString));
