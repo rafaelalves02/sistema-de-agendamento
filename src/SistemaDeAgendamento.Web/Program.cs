@@ -26,8 +26,8 @@ builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 var databaseProvider = builder.Configuration["DatabaseProvider"]?.ToLower() ?? "mysql";
 
 // Connection strings devem ser configuradas via variáveis de ambiente por segurança
-var mysqlConnectionString = builder.Configuration.GetConnectionString("SistemaDeAgendamentoMySQLConnectionString"); 
-var sqlServerConnectionString = builder.Configuration.GetConnectionString("SistemaDeAgendamentoSQLServerConnectionString");
+var mysqlConnectionString = builder.Configuration.GetConnectionString("MySqlConnection"); 
+var sqlServerConnectionString = builder.Configuration.GetConnectionString("SqlServerConnection");
 
 // Registrar repositórios baseado no DatabaseProvider
 if (databaseProvider == "sqlserver")
