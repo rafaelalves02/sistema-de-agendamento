@@ -3,12 +3,12 @@
 ################################################################################
 
 /.vs
-/SistemaDeAgendamento/.vs/SistemaDeAgendamento
-/SistemaDeAgendamento/SistemaDeAgendamento.Repositories/bin
-/SistemaDeAgendamento/SistemaDeAgendamento.Repositories/obj
-/SistemaDeAgendamento/SistemaDeAgendamento.Services/bin
-/SistemaDeAgendamento/SistemaDeAgendamento.Services/obj
-/SistemaDeAgendamento/SistemaDeAgendamento.Web/bin
-/SistemaDeAgendamento/SistemaDeAgendamento.Web/obj
-/SistemaDeAgendamento/SistemaDeAgendamento.Web/SistemaDeAgendamento.Web.csproj.user
-/SistemaDeAgendamento/.vs/ProjectEvaluation
+/src/.vs
+/src/SistemaDeAgendamento.Repositories/bin
+/src/SistemaDeAgendamento.Repositories/obj
+/src/SistemaDeAgendamento.Services
+/src/SistemaDeAgendamento.Services/obj
+/src/SistemaDeAgendamento.Web/bin
+/src/SistemaDeAgendamento.Web/obj
+/src/SistemaDeAgendamento.Web/node_modules
+/src/SistemaDeAgendamento.Web/SistemaDeAgendamento.Web.csproj.user
