@@ -1,357 +1,394 @@
-# 📅 Sistema de Agendamento - Base Profissional
+# 📅 Sistema de Agendamento
 
-<div align="center">
-
-![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white)
-![C#](https://img.shields.io/badge/C%23-11.0-239120?logo=c-sharp&logoColor=white)
-![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-MVC-512BD4?logo=dotnet&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white)
-
-**Sistema completo de gestão de agendamentos desenvolvido com arquitetura profissional, padrões de design e tecnologias modernas.**
-
-[🎯 Sobre o Projeto](#-sobre-o-projeto) • [🏗️ Decisões Arquiteturais](#️-decisões-arquiteturais) • [💡 Raciocínio e Escolhas](#-raciocínio-e-escolhas-técnicas) • [🚀 Funcionalidades](#-funcionalidades-implementadas) • [📊 Qualidade do Código](#-qualidade-e-métricas)
-
-</div>
+Sistema completo de gestão de agendamentos desenvolvido em .NET 8.0, projetado para facilitar o agendamento de serviços, gestão de funcionários e controle de disponibilidade em tempo real.
 
 ---
 
-## 🎯 Sobre o Projeto
+## 🎯 Visão Geral
 
-### O Objetivo
-
-Desenvolvi este sistema como uma **base sólida e reutilizável** para criação de sistemas de agendamento personalizados para diferentes clientes e tipos de negócio.
-
-A estratégia é oferecer uma solução completa que pode ser adaptada e entregue como sistema personalizado, onde cada cliente recebe sua própria instância totalmente customizada (design, nomenclaturas, regras de negócio específicas).
-
-### Por Que Desenvolvi Desta Forma?
-
-Após analisar diferentes abordagens, optei por criar uma base profissional ao invés de desenvolver sistemas do zero para cada cliente. As razões:
-
-- ✅ **Eficiência**: Não recriar estrutura básica a cada projeto
-- ✅ **Qualidade**: Aplicar arquitetura sólida desde o início
-- ✅ **Consistência**: Padrões uniformes facilitam manutenção
-- ✅ **Escalabilidade**: Base preparada para evoluir com cada cliente
-- ✅ **Valor**: Entregar solução profissional em tempo otimizado
-
-### Conceito de Negócio
-
-Cada cliente recebe uma **instância independente e personalizada** do sistema:
-- Sistema próprio com banco de dados isolado
-- Personalização total (branding, nome, funcionalidades)
-- Entrega completa e configurada
-- Suporte e evolução conforme necessidade
+Sistema web robusto e escalável para gerenciamento de agendamentos de serviços, com suporte a múltiplos funcionários, horários de disponibilidade configuráveis e interface intuitiva para clientes e administradores.
 
 ---
 
-## 🏗️ Decisões Arquiteturais
+## 🖼️ Screenshots
 
-### Arquitetura em Camadas
+### Tela Principal / Dashboard
+<!-- Adicione aqui uma captura de tela da tela principal -->
+![Tela Principal](../docs/images/dashboard.png)
 
-Optei por uma **arquitetura em três camadas bem definidas**, separando claramente as responsabilidades:
-
-```
-Presentation Layer (Web)
-    ↓
-Business Layer (Services)  
-    ↓
-Data Access Layer (Repositories)
-```
-
-**Por quê esta escolha?**
-
-Separei as camadas porque:
-1. **Manutenibilidade**: Mudanças em uma camada não afetam outras
-2. **Testabilidade**: Cada camada pode ser testada isoladamente
-3. **Reutilização**: Lógica de negócio centralizada pode ser reutilizada
-4. **Personalização**: Customizações ficam isoladas na camada de apresentação
-5. **Escalabilidade**: Fácil adicionar novas funcionalidades sem impacto no core
-
-### Design Patterns Escolhidos
-
-#### Repository Pattern
-Implementei o Repository Pattern para abstrair completamente o acesso a dados.
-
-**Decisão**: Escolhi este padrão porque:
-- Facilita futuras mudanças de banco de dados ou implementação de ORM
-- Centraliza lógica de acesso a dados
-- Permite mock em testes unitários
-- Mantém código de negócio independente do banco
-
-#### Dependency Injection
-Utilizei Dependency Injection nativo do .NET em toda a aplicação.
-
-**Decisão**: Esta escolha garante:
-- Baixo acoplamento entre componentes
-- Facilidade para criar mocks em testes
-- Flexibilidade para injeção de dependências customizadas
-- Manutenibilidade do código
-
-#### Mapping Pattern
-Criei camadas de mapeamento entre entidades, DTOs e ViewModels.
-
-**Decisão**: Implementei mapeamentos porque:
-- Protege entidades de domínio da camada de apresentação
-- Permite personalização de apresentação sem afetar lógica de negócio
-- Facilita versionamento de APIs futuras
-- Mantém responsabilidades bem separadas
-
-### Princípios SOLID Aplicados
-
-Toda a arquitetura segue os princípios SOLID:
-
-- **Single Responsibility**: Cada classe tem uma única responsabilidade clara
-- **Open/Closed**: Sistema extensível sem modificar código existente
-- **Liskov Substitution**: Interfaces implementadas corretamente
-- **Interface Segregation**: Interfaces específicas e coesas
-- **Dependency Inversion**: Dependências através de abstrações
-
-**Por que isso importa?**
-
-SOLID não é apenas teoria - aplicá-lo resultou em:
-- Código mais fácil de entender e manter
-- Menos bugs ao fazer mudanças
-- Facilidade para adicionar novas funcionalidades
-- Testes mais simples de escrever
-
----
-
-## 💡 Raciocínio e Escolhas Técnicas
-
-### Por Que .NET 8 e C# 11?
-
-Escolhi as versões mais recentes do ecossistema .NET porque:
-
-- **Performance**: .NET 8 oferece excelente performance
-- **Recursos Modernos**: C# 11 com `required` properties, nullable reference types
-- **Suporte Longo**: LTS garantindo suporte prolongado
-- **Ecossistema Maduro**: Bibliotecas e ferramentas consolidadas
-- **Produtividade**: Framework completo reduz tempo de desenvolvimento
-
-### Por Que ASP.NET Core MVC?
-
-Ao invés de Web API + Frontend separado, escolhi MVC porque:
-
-- **Simplicidade**: Solução completa em uma única aplicação
-- **Rapidez**: Desenvolvimento mais ágil para este caso de uso
-- **Manutenção**: Um único projeto facilita deploy e manutenção
-- **Razor Views**: Templates server-side são ideais para personalização visual por cliente
-
-### Por Que MySQL?
-
-Escolhi MySQL como banco de dados porque:
-
-- **Custo**: Open source, reduzindo custos de infraestrutura para clientes
-- **Compatibilidade**: Amplamente suportado em diferentes ambientes
-- **Performance**: Adequado para o volume esperado
-- **Familiaridade**: Conhecimento comum facilita manutenção
-
-### Estrutura de Pastas e Organização
-
-Organizei o projeto em projetos separados por responsabilidade:
-
-```
-Repositories/  → Acesso a dados
-Services/      → Lógica de negócio
-Web/           → Apresentação
-```
-
-**Raciocínio**: Esta separação permite:
-- Trabalhar em uma camada sem afetar outras
-- Reutilizar lógica de negócio em diferentes interfaces (web, API futura)
-- Facilita identificação de onde fazer mudanças
-- Melhor organização mental do código
-
-### Algoritmo de Disponibilidade
-
-Desenvolvi um algoritmo específico para calcular horários disponíveis:
-
-**Desafio**: Considerar múltiplos fatores simultaneamente:
-- Horários de trabalho do funcionário por dia da semana
-- Agendamentos já existentes
-- Duração variável do serviço
-- Slots de tempo para evitar conflitos
-
-**Solução Implementada**:
-1. Busco disponibilidades do funcionário para o dia específico
-2. Obtendo agendamentos existentes na mesma data
-3. Calculo slots de 10 em 10 minutos dentro da janela disponível
-4. Verifico conflitos com agendamentos existentes
-5. Garanto que o serviço cabe completamente no slot
-6. Retorno apenas horários válidos
-
-**Por que esta abordagem?**
-
-Esta solução é:
-- **Eficiente**: Uma única query busca disponibilidades, outra busca agendamentos
-- **Precisa**: Elimina conflitos e garante integridade
-- **Extensível**: Pode ser adaptado para regras específicas (intervalos mínimos, etc.)
-- **Performática**: Cálculo em memória após buscar dados do banco
-
----
-
-## 🚀 Funcionalidades Implementadas
-
-### Gestão de Usuários e Autenticação
-- Sistema de autenticação baseado em cookies
-- Controle de acesso por roles (Admin/Employee)
-- Gerenciamento seguro de sessões
-
-**Implementação**: Utilizei o sistema nativo de autenticação do ASP.NET Core, configurando cookies de forma segura e gerenciando sessões adequadamente.
+### Tela de Agendamento
+<!-- Adicione aqui uma captura de tela da tela de criação de agendamento -->
+![Tela de Agendamento](../docs/images/appointment-create.png)
 
 ### Gestão de Funcionários
-- CRUD completo com validações
-- Gestão de horários de disponibilidade por dia da semana
-- Vinculação de funcionários a usuários do sistema
-
-**Destaque Técnico**: Implementei relacionamento entre User e Employee, permitindo que funcionários tenham acesso ao sistema através de suas credenciais próprias.
+<!-- Adicione aqui uma captura de tela da tela de gestão de funcionários -->
+![Gestão de Funcionários](../docs/images/employees.png)
 
 ### Gestão de Serviços
-- CRUD completo de serviços
-- Definição de preço e duração
-- Interface intuitiva para administradores
+<!-- Adicione aqui uma captura de tela da tela de gestão de serviços -->
+![Gestão de Serviços](../docs/images/services.png)
 
-**Extensibilidade**: A estrutura permite facilmente adicionar categorias, pacotes, combos ou outros conceitos específicos por tipo de negócio.
-
-### Sistema de Agendamentos
-- **Algoritmo inteligente de disponibilidade** (detalhado acima)
-- Interface interativa de seleção de data e hora
-- Validação em tempo real de conflitos
-- Gestão de status (Agendado, Concluído, Cancelado)
-- Filtros avançados para visualização
-
-**Destaque**: O sistema previne automaticamente double-booking e garante que apenas horários realmente disponíveis sejam apresentados ao usuário.
-
-### Interface e Experiência do Usuário
-- Design responsivo com Bootstrap 5
-- Experiência mobile-first
-- Interface intuitiva e acessível
-- Validações client-side e server-side
-
-**Atenção aos Detalhes**: Implementei validações tanto no frontend (UX imediata) quanto no backend (segurança e integridade).
+### Visualização de Agendamentos
+<!-- Adicione aqui uma captura de tela da listagem de agendamentos -->
+![Listagem de Agendamentos](../docs/images/appointments-list.png)
 
 ---
 
-## 📊 Qualidade e Métricas
-
-### Arquitetura
-
-- **3 Camadas** bem definidas e separadas
-- **7 Entidades** principais do domínio
-- **10+ Repositories** com acesso tipado e interfaces
-- **5+ Services** com lógica de negócio complexa
-- **100% C# 11** utilizando recursos modernos da linguagem
-
-### Padrões e Qualidade
-
-- ✅ **SOLID**: Aplicado consistentemente em toda arquitetura
-- ✅ **Design Patterns**: Repository, Dependency Injection, Mapping
-- ✅ **Clean Code**: Código legível, bem nomeado e organizado
-- ✅ **Separation of Concerns**: Responsabilidades claramente definidas
-- ✅ **Null Safety**: Uso de nullable reference types do C# 11
-
-### Processo de Desenvolvimento
-
-Desenvolvi este projeto com foco em:
-
-1. **Arquitetura Primeiro**: Pensei na estrutura antes de começar a codificar
-2. **Padrões Desde o Início**: Apliquei padrões desde o primeiro código
-3. **Extensibilidade**: Código preparado para crescer sem refatorações grandes
-4. **Manutenibilidade**: Estrutura que facilita futuras modificações
-5. **Qualidade**: Não apenas "funcionar", mas fazer bem feito
-
----
-
-## 🎓 Competências Demonstradas
-
-Este projeto demonstra minhas habilidades em:
-
-### Arquitetura de Software
-- Design de sistemas escaláveis e manuteníveis
-- Separação de responsabilidades
-- Planejamento arquitetural antes da implementação
-
-### Padrões e Boas Práticas
-- Aplicação prática de Design Patterns
-- Princípios SOLID na prática
-- Clean Code e código legível
-
-### Tecnologias Modernas
-- .NET 8 com recursos mais recentes
-- C# 11 e suas funcionalidades modernas
-- ASP.NET Core MVC completo
-- MySQL e modelagem de banco de dados
-
-### Lógica de Negócio Complexa
-- Desenvolvimento de algoritmos específicos (disponibilidade)
-- Validações robustas
-- Prevenção de regras de negócio
-
-### Frontend e UX
-- Interface responsiva e moderna
-- Validações client-side e server-side
-- Experiência do usuário cuidadosa
-
-### Pensamento Estratégico
-- Visão de produto (base reutilizável)
-- Otimização de processos de desenvolvimento
-- Foco em qualidade e manutenibilidade
-
----
-
-## 🔧 Tecnologias Utilizadas
+## 🛠️ Tecnologias e Ferramentas
 
 ### Backend
-- **.NET 8.0** - Framework moderno e performático
-- **C# 11** - Linguagem com recursos modernos
-- **ASP.NET Core MVC** - Framework web robusto
-- **MySQL** - Banco de dados relacional
-- **MySql.Data** - Provider para MySQL
+- **.NET 8.0** - Framework principal
+- **C#** - Linguagem de programação
+- **ASP.NET Core MVC** - Framework web
+- **Entity Framework Core** (implícito via ADO.NET patterns)
+
+### Banco de Dados
+- **MySQL** - Banco de dados principal
+- **SQL Server** - Suporte alternativo (multi-database)
+- **ADO.NET** - Acesso direto a dados
 
 ### Frontend
-- **Razor Pages** - Engine de views do ASP.NET Core
-- **Bootstrap 5.3** - Framework CSS responsivo
-- **JavaScript (ES6+)** - Interatividade moderna
-- **HTML5 & CSS3** - Semântica e estilização
+- **Bootstrap 5.3.8** - Framework CSS responsivo
+- **SASS** - Pré-processador CSS
+- **Razor Pages** - Engine de views
+- **JavaScript** - Interatividade
 
-### Arquitetura e Padrões
-- **Dependency Injection** nativo do .NET
-- **Cookie Authentication** - Autenticação segura
-- **Repository Pattern** - Abstração de dados
-- **Mapping Pattern** - Separação de camadas
+### Segurança e Autenticação
+- **Cookie Authentication** - Sistema de autenticação
+- **Role-Based Access Control (RBAC)** - Controle de acesso por perfil
 
----
-
-## 📝 Próximos Passos e Evolução
-
-Este projeto está em **desenvolvimento ativo** e preparado para:
-
-- **Personalização por Cliente**: Cada instância pode ser totalmente customizada
-- **Extensões**: Novas funcionalidades podem ser adicionadas conforme necessidade
-- **Manutenção**: Estrutura preparada para evoluções e melhorias
-- **Escalabilidade**: Arquitetura permite crescimento do sistema
-
-A base está sólida e pronta para ser adaptada e entregue como solução completa para diferentes negócios.
+### Ferramentas de Desenvolvimento
+- **Visual Studio / Visual Studio Code**
+- **Git** - Controle de versão
+- **npm** - Gerenciamento de pacotes frontend
 
 ---
 
-## 💼 Valor para Clientes
+## 🏗️ Arquitetura
 
-### O Que Este Projeto Oferece
+O sistema foi desenvolvido seguindo os princípios de **Arquitetura em Camadas** e **Separation of Concerns**:
 
-✅ **Solução Completa**: Sistema funcional e pronto para uso  
-✅ **Arquitetura Profissional**: Base sólida que inspira confiança  
-✅ **Personalização Total**: Adaptado especificamente para cada negócio  
-✅ **Interface Moderna**: Design profissional e responsivo  
-✅ **Manutenibilidade**: Estrutura que facilita evolução contínua  
-✅ **Qualidade**: Código limpo e bem organizado  
+```
+┌─────────────────────────────────────┐
+│         Camada de Apresentação      │
+│   (Controllers, Views, ViewModels)  │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│      Camada de Serviços             │
+│   (Lógica de Negócio, Validações)   │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│      Camada de Repositório          │
+│   (Acesso a Dados, Queries)         │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│         Banco de Dados              │
+│   (MySQL / SQL Server)              │
+└─────────────────────────────────────┘
+```
+
+### Padrões de Projeto Implementados
+
+- **Repository Pattern** - Abstração do acesso a dados
+- **Dependency Injection** - Inversão de controle
+- **Service Layer Pattern** - Separação de lógica de negócio
+- **DTO Pattern** - Transferência de dados entre camadas
+- **Mapping Pattern** - Conversão entre entidades e DTOs
+
+### Estrutura do Projeto
+
+```
+SistemaDeAgendamento/
+├── SistemaDeAgendamento.Web/          # Camada de apresentação
+│   ├── Controllers/                   # Controladores MVC
+│   ├── Views/                         # Views Razor
+│   ├── Models/                        # ViewModels
+│   ├── Mappings/                      # Mapeamentos ViewModel ↔ DTO
+│   └── wwwroot/                       # Arquivos estáticos
+│
+├── SistemaDeAgendamento.Services/     # Camada de serviços
+│   ├── Models/                        # DTOs e Request/Response
+│   ├── Mappings/                      # Mapeamentos Entity ↔ DTO
+│   └── [Service]Service.cs            # Serviços de negócio
+│
+├── SistemaDeAgendamento.Repositories/ # Camada de acesso a dados
+│   ├── Entities/                      # Entidades do domínio
+│   └── [Entity]Repository.cs          # Repositórios
+│
+└── Scripts SQL/                       # Scripts de banco de dados
+    ├── create_database.sql            # MySQL
+    └── create_database_sqlserver.sql  # SQL Server
+```
 
 ---
 
-<div align="center">
+## ✨ Principais Funcionalidades
 
-**Desenvolvido com foco em qualidade, arquitetura sólida e boas práticas**
+### 👥 Gestão de Usuários e Autenticação
+- Sistema de login com autenticação por cookies
+- Controle de acesso baseado em roles (Admin e Employee)
+- Sessões com expiração configurável
+- Proteção de rotas por autorização
 
-Usando .NET 8, C# 11 e tecnologias modernas
+### 👨‍💼 Gestão de Funcionários
+- Cadastro completo de funcionários (nome, telefone, email)
+- Vinculação de funcionários a usuários do sistema
+- Gestão de disponibilidade por dia da semana
+- Configuração de horários de trabalho (início e fim)
+- Ativação/desativação de disponibilidades
 
-</div>
+### 🎯 Gestão de Serviços
+- Cadastro de serviços com nome, preço e duração
+- Edição e exclusão de serviços
+- Listagem completa de serviços disponíveis
+
+### 📅 Sistema de Agendamentos
+- **Criação de agendamentos:**
+  - Seleção de serviço
+  - Seleção de funcionário
+  - Cálculo automático de horários disponíveis
+  - Validação de conflitos de horário
+  - Cadastro rápido de clientes durante o agendamento
+  
+- **Visualização e filtros:**
+  - Listagem completa de agendamentos
+  - Filtros por data, serviço, status, funcionário e telefone do cliente
+  - Visualização diferenciada por perfil (Admin, Employee, Cliente)
+  - Busca por telefone do cliente (com normalização automática)
+
+- **Status de agendamentos:**
+  - Agendado (Scheduled)
+  - Concluído (Completed)
+  - Cancelado (Canceled)
+
+### 👤 Gestão de Clientes
+- Cadastro automático durante agendamento
+- Busca de agendamentos por telefone
+- Armazenamento de telefone em cookies para facilitar consultas futuras
+
+### 🎨 Personalização (Branding)
+- Configuração de nome do negócio
+- Suporte a logo customizado
+- Configuração de favicon
+- Opção de exibir/ocultar logo na navbar
+- Configuração via `appsettings.json`
+
+### 🌐 Internacionalização
+- Localização completa em Português (pt-BR)
+- Formatação de datas e números conforme padrão brasileiro
+- Cultura configurada globalmente
+
+---
+
+## 🚀 Recursos Técnicos Avançados
+
+### Multi-Database Support
+- Suporte nativo para **MySQL** e **SQL Server**
+- Troca de banco de dados via configuração (`DatabaseProvider`)
+- Repositórios específicos para cada banco
+- Scripts SQL para ambos os bancos incluídos
+
+### Validações e Regras de Negócio
+- Validação de conflitos de horário
+- Cálculo automático de slots disponíveis baseado em:
+  - Disponibilidade do funcionário
+  - Duração do serviço
+  - Agendamentos existentes
+- Validação de dados de entrada (ModelState)
+- Tratamento de erros centralizado
+
+### Performance e Escalabilidade
+- Uso de Dependency Injection para baixo acoplamento
+- Queries otimizadas com acesso direto via ADO.NET
+- Estrutura preparada para crescimento
+- Separação clara de responsabilidades
+
+### Segurança
+- Autenticação baseada em cookies
+- Proteção contra acesso não autorizado
+- Validação de dados de entrada
+- Connection strings via variáveis de ambiente
+
+---
+
+## 📋 Pré-requisitos
+
+- **.NET 8.0 SDK** ou superior
+- **MySQL** 8.0+ ou **SQL Server** 2019+
+- **Node.js** 16+ (para compilação de assets)
+- **npm** ou **yarn** (para dependências frontend)
+
+---
+
+## 🔧 Configuração e Instalação
+
+### 1. Clone o repositório
+```bash
+git clone [url-do-repositorio]
+cd sistema-de-agendamento/src
+```
+
+### 2. Configure o banco de dados
+
+#### Para MySQL:
+```bash
+mysql -u root -p < create_database.sql
+```
+
+#### Para SQL Server:
+Execute o script `create_database_sqlserver.sql` no SQL Server Management Studio
+
+### 3. Configure as variáveis de ambiente
+
+#### Para MySQL:
+```bash
+export SISTEMA_AGENDAMENTO_MYSQL_CONNECTION_STRING="Server=localhost;Database=sistema_de_agendamento;User=root;Password=sua_senha;"
+```
+
+#### Para SQL Server:
+```bash
+export SISTEMA_AGENDAMENTO_SQLSERVER_CONNECTION_STRING="Server=localhost;Database=sistema_de_agendamento;User=sa;Password=sua_senha;TrustServerCertificate=True;"
+```
+
+### 4. Configure o appsettings.json
+
+Edite `SistemaDeAgendamento.Web/appsettings.json`:
+
+```json
+{
+  "DatabaseProvider": "mysql", // ou "sqlserver"
+  "Branding": {
+    "BusinessName": "Seu Negócio",
+    "LogoUrl": "",
+    "FaviconUrl": "/favicon.ico",
+    "ShowLogoInNavbar": false
+  }
+}
+```
+
+### 5. Instale as dependências frontend
+```bash
+cd SistemaDeAgendamento.Web
+npm install
+```
+
+### 6. Execute o projeto
+```bash
+dotnet run --project SistemaDeAgendamento.Web
+```
+
+O sistema estará disponível em `https://localhost:5001` ou `http://localhost:5000`
+
+### 7. Login inicial
+- **Usuário:** `admin`
+- **Senha:** `123`
+
+⚠️ **Importante:** Altere a senha padrão em produção!
+
+---
+
+## 📊 Modelo de Dados
+
+### Entidades Principais
+
+- **User** - Usuários do sistema (Admin/Employee)
+- **Role** - Perfis de acesso
+- **Employee** - Funcionários que prestam serviços
+- **Availability** - Horários de disponibilidade dos funcionários
+- **Client** - Clientes que fazem agendamentos
+- **Service** - Serviços oferecidos
+- **Appointment** - Agendamentos realizados
+
+### Relacionamentos
+
+```
+User (1) ──< (1) Employee
+Employee (1) ──< (N) Availability
+Employee (1) ──< (N) Appointment
+Client (1) ──< (N) Appointment
+Service (1) ──< (N) Appointment
+```
+
+---
+
+## 🎯 Casos de Uso
+
+### Para Administradores
+- Gerenciar funcionários e suas disponibilidades
+- Cadastrar e editar serviços
+- Visualizar todos os agendamentos
+- Filtrar agendamentos por diversos critérios
+- Personalizar branding do sistema
+
+### Para Funcionários
+- Visualizar apenas seus próprios agendamentos
+- Filtrar agendamentos por data e cliente
+- Acompanhar agenda do dia
+
+### Para Clientes
+- Consultar agendamentos pelo telefone
+- Visualizar histórico de agendamentos
+- Ver detalhes de serviços agendados
+
+---
+
+## 🔐 Segurança
+
+- Autenticação baseada em cookies com expiração configurável
+- Proteção de rotas por autorização
+- Validação de dados de entrada
+- Connection strings armazenadas em variáveis de ambiente
+- Proteção contra SQL Injection (uso de parâmetros)
+- Tratamento de erros sem exposição de informações sensíveis
+
+---
+
+## 📈 Melhorias Futuras Sugeridas
+
+- [ ] API REST para integração com outros sistemas
+- [ ] Notificações por email/SMS
+- [ ] Dashboard com gráficos e estatísticas
+- [ ] Exportação de relatórios (PDF/Excel)
+- [ ] Sistema de lembretes automáticos
+- [ ] Integração com calendários (Google Calendar, Outlook)
+- [ ] App mobile (React Native / Flutter)
+- [ ] Sistema de avaliações e feedback
+- [ ] Pagamentos online
+- [ ] Histórico de alterações (auditoria)
+
+---
+
+## 👨‍💻 Habilidades Demonstradas
+
+Este projeto demonstra conhecimento e experiência em:
+
+- ✅ **Desenvolvimento Backend** com .NET Core
+- ✅ **Arquitetura de Software** (Camadas, Repository Pattern, DI)
+- ✅ **Banco de Dados** (MySQL, SQL Server, modelagem relacional)
+- ✅ **Desenvolvimento Web** (MVC, Razor Pages)
+- ✅ **Frontend** (Bootstrap, CSS, JavaScript)
+- ✅ **Segurança** (Autenticação, Autorização, RBAC)
+- ✅ **Boas Práticas** (SOLID, Clean Code, Separation of Concerns)
+- ✅ **Versionamento** (Git)
+- ✅ **Multi-database** (Abstração de acesso a dados)
+- ✅ **Localização** (i18n)
+
+---
+
+## 📝 Licença
+
+Este projeto é um exemplo de portfólio e está disponível para fins educacionais e de demonstração.
+
+---
+
+## 📧 Contato
+
+Para mais informações sobre este projeto ou oportunidades de colaboração, entre em contato através do perfil do desenvolvedor.
+
+---
+
+**Desenvolvido com ❤️ usando .NET 8.0**
+
