@@ -12,6 +12,7 @@
 <form class="row g-3 needs-validation" asp-controller="Appointment" asp-action="Create" id="form" novalidate>
 
     <input asp-for="Service.Id" type="hidden" required/>
+    <input id="serviceDuration" asp-for="Service.Duration" type="hidden" required />
 
     <div class="col-md-12">
         <label for="inputName" class="form-label">Nome Completo:</label>
@@ -191,6 +192,7 @@
             const employeeSelect = document.getElementById("inputEmployee");
             const dateInput = document.getElementById("dateInput");
             const scheduleGrid = document.getElementById("available-times");
+            const serviceDurarion = document.getElementById("serviceDuration").value;
 
             const employeeId = employeeSelect.value;
             const date = dateInput.value;
@@ -208,7 +210,7 @@
             scheduleGrid.innerHTML = "<p>Carregando horários...</p>";
 
             try {
-                const response = await fetch(`@Url.Action("GetAvailableTimes", "Appointment")?employeeId=${employeeId}&date=${date}&serviceDuration=${@serviceDuration}`);
+                const response = await fetch(`@Url.Action("GetAvailableTimes", "Appointment")?employeeId=${employeeId}&date=${date}&serviceDuration=${serviceDuration}`);
                 if (!response.ok) throw new Error("Erro ao buscar horários");
 
                 const times = await response.json();
