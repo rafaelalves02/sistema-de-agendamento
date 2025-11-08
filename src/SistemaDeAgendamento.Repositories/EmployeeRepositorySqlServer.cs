@@ -27,7 +27,7 @@ namespace SistemaDeAgendamento.Repositories
 
                 var cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@name", employee.Name);
-                cmd.Parameters.AddWithValue("@email", employee.Email);
+                cmd.Parameters.AddWithValue("@email", (object)employee.Email! ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@phone_number", employee.PhoneNumber);
                 cmd.Parameters.AddWithValue("@user_id", employee.User!.Id);
 
@@ -91,8 +91,7 @@ namespace SistemaDeAgendamento.Repositories
                 cmd.Parameters.AddWithValue("@employee_id", employee.Id);
                 cmd.Parameters.AddWithValue("@name", employee.Name);
                 cmd.Parameters.AddWithValue("@phone_number", employee.PhoneNumber);
-                cmd.Parameters.AddWithValue("@email", employee.Email);
-
+                cmd.Parameters.AddWithValue("@email", (object)employee.Email! ?? DBNull.Value);
                 conn.Open();
 
                 return cmd.ExecuteNonQuery();
