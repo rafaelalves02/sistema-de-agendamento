@@ -14,23 +14,23 @@ Sistema web robusto e escalável para gerenciamento de agendamentos de serviços
 
 ### Tela Principal / Dashboard
 <!-- Adicione aqui uma captura de tela da tela principal -->
-![Tela Principal](../docs/images/dashboard.png)
+![Tela Principal](docs/images/dashboard.png)
 
 ### Tela de Agendamento
 <!-- Adicione aqui uma captura de tela da tela de criação de agendamento -->
-![Tela de Agendamento](../docs/images/appointment-create.png)
+![Tela de Agendamento](docs/images/appointment-create.png)
 
 ### Gestão de Funcionários
 <!-- Adicione aqui uma captura de tela da tela de gestão de funcionários -->
-![Gestão de Funcionários](../docs/images/employees.png)
+![Gestão de Funcionários](docs/images/employees.png)
 
 ### Gestão de Serviços
 <!-- Adicione aqui uma captura de tela da tela de gestão de serviços -->
-![Gestão de Serviços](../docs/images/services.png)
+![Gestão de Serviços](docs/images/services.png)
 
 ### Visualização de Agendamentos
 <!-- Adicione aqui uma captura de tela da listagem de agendamentos -->
-![Listagem de Agendamentos](../docs/images/appointments-list.png)
+![Listagem de Agendamentos](docs/images/appointments-list.png)
 
 ---
 
@@ -391,4 +391,5 @@ Para mais informações sobre este projeto ou oportunidades de colaboração, en
 ---
 
 **Desenvolvido com ❤️ usando .NET 8.0**
+
 
