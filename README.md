@@ -54,7 +54,7 @@ Sistema web robusto e escalável para gerenciamento de agendamentos de serviços
 - **Role-Based Access Control (RBAC)** - Controle de acesso por perfil
 
 ### Ferramentas de Desenvolvimento
-- **Visual Studio / Visual Studio Code**
+- **Visual Studio**
 - **Git** - Controle de versão
 - **npm** - Gerenciamento de pacotes frontend
 
@@ -387,6 +387,7 @@ Para mais informações sobre este projeto ou oportunidades de colaboração, en
 ---
 
 **Desenvolvido com ❤️ usando .NET 8.0**
+
 
 
 
