@@ -340,23 +340,6 @@ Service (1) ──< (N) Appointment
 - Proteção contra SQL Injection (uso de parâmetros)
 - Tratamento de erros sem exposição de informações sensíveis
 
----
-
-## 📈 Melhorias Futuras Sugeridas
-
-- [ ] API REST para integração com outros sistemas
-- [ ] Notificações por email/SMS
-- [ ] Dashboard com gráficos e estatísticas
-- [ ] Exportação de relatórios (PDF/Excel)
-- [ ] Sistema de lembretes automáticos
-- [ ] Integração com calendários (Google Calendar, Outlook)
-- [ ] App mobile (React Native / Flutter)
-- [ ] Sistema de avaliações e feedback
-- [ ] Pagamentos online
-- [ ] Histórico de alterações (auditoria)
-
----
-
 ## 👨‍💻 Habilidades Demonstradas
 
 Este projeto demonstra conhecimento e experiência em:
@@ -387,6 +370,7 @@ Para mais informações sobre este projeto ou oportunidades de colaboração, en
 ---
 
 **Desenvolvido com ❤️ usando .NET 8.0**
+
 
 
 
