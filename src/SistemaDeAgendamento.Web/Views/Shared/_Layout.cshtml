@@ -1,23 +1,41 @@
 ﻿@using System.Security.Claims
+@using Microsoft.Extensions.Options
+@inject IOptions<SistemaDeAgendamento.Web.Models.BrandingOptions> BrandingOptions
+@{
+    var branding = BrandingOptions.Value;
+}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Sistema De Agendamento</title>
+    <title>@ViewData["Title"] - @branding.BusinessName</title>
+    <link rel="icon" type="image/x-icon" href="@branding.FaviconUrl" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/custom.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SistemaDeAgendamento.Web.styles.css" asp-append-version="true" />
+    @await Component.InvokeAsync("Branding")
     @RenderSection("Styles", required: false)
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=cards" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary shadow-sm">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-semibold me-0" asp-controller="Home" asp-action="Index">
-                    Sistema De Agendamento
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top ">
+            <div class="container">
+                <a class="navbar-brand fw-semibold d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
+                    @if (branding.ShowLogoInNavbar && !string.IsNullOrEmpty(branding.LogoUrl))
+                    {
+                        <img src="@branding.LogoUrl" alt="@branding.BusinessName" height="32" class="rounded" />
+                    }
+                    else
+                    {
+                        <i class="bi bi-calendar-check fs-4"></i>
+                    }
+                    <span>@branding.BusinessName</span>
                 </a>
 
                 @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
@@ -28,71 +46,115 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
 
-                    <div class="collapse navbar-collapse mt-2 mt-md-0" id="navbarCollapse">
-                        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <div class="nav-itens collapse navbar-collapse" id="navbarCollapse">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Service" asp-action="Read">Serviços</a>
+                                <a class="nav-link d-flex align-items-center gap-1" asp-controller="Service" asp-action="Read">
+                                    <i class="bi bi-briefcase"></i>
+                                    <span>Serviços</span>
+                                </a>
                             </li>
 
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Employee" asp-action="Read">Funcionários</a>
+                                    <a class="nav-link d-flex align-items-center gap-1" asp-controller="Employee" asp-action="Read">
+                                        <i class="bi bi-people"></i>
+                                        <span>Funcionários</span>
+                                    </a>
                                 </li>
                             }
 
                             @if (User.IsInRole("Employee"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Employee" asp-action="Read">Informações Pessoais</a>
+                                    <a class="nav-link d-flex align-items-center gap-1" asp-controller="Employee" asp-action="Read">
+                                        <i class="bi bi-person-circle"></i>
+                                        <span>Informações Pessoais</span>
+                                    </a>
                                 </li>
                             }
 
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Appointment" asp-action="Read">Agendamentos</a>
+                                <a class="nav-link d-flex align-items-center gap-1" asp-controller="Appointment" asp-action="Read">
+                                    <i class="bi bi-calendar-event"></i>
+                                    <span>Agendamentos</span>
+                                </a>
                             </li>
                         </ul>
 
                         @if (User.Identity!.IsAuthenticated)
                         {
-                            <form class="d-flex mt-2 mt-md-0" asp-controller="User" asp-action="Logout">
-                                <button class="btn btn-outline-light" type="submit">Sair</button>
-                            </form>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="text-white-50 small d-none d-md-inline">
+                                    <i class="bi bi-person-circle me-1"></i>
+                                    @User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                                </span>
+                                <button id="themeToggle" class="btn btn-outline-light btn-sm" type="button" aria-label="Alternar tema" title="Alternar tema">
+                                    <i class="bi bi-moon-stars"></i>
+                                </button>
+                                <form asp-controller="User" asp-action="Logout">
+                                    <button class="btn btn-outline-light btn-sm" type="submit">
+                                        <i class="bi bi-box-arrow-right me-1"></i>Sair
+                                    </button>
+                                </form>
+                            </div>
                         }
                     </div>
                 }
                 else
                 {
-                    <form class="d-flex" asp-controller="Appointment" asp-action="Read">
-                        <button class="btn btn-outline-light my-appointments-button btn-sm" type="submit">
-                            <i class="bi bi-calendar-check me-1"></i>Meus Agendamentos
+                    <div class="d-flex align-items-center gap-2">
+                        <button id="themeToggle" class="btn btn-outline-light btn-sm" type="button" aria-label="Alternar tema" title="Alternar tema">
+                            <i class="bi bi-moon-stars"></i>
                         </button>
-                    </form>
+                        <form class="d-flex" asp-controller="Appointment" asp-action="Read">
+                            <button class="btn btn-outline-light btn-sm" type="submit">
+                                <i class="bi bi-calendar-check me-1"></i>
+                                <span class="d-none d-md-inline">Meus Agendamentos</span>
+                                <span class="d-md-none">Agendamentos</span>
+                            </button>
+                        </form>
+                    </div>
                 }
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    <div class="container my-4">
+        <main role="main" class="pb-4">
             @RenderBody()
         </main>
-
-        <footer class="d-flex flex-column flex-md-row justify-content-between align-items-center py-3 my-4 border-top">
-            <p class="col-md-4 mb-0 text-body-secondary">&copy; 2025 Sistema de Agendamento</p>
-            <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none" aria-label="Bootstrap">
-                <b>Sistema De Agendamento</b>
-            </a>
-            <ul class="nav col-md-4 justify-content-end">
-                @if (!User.Identity!.IsAuthenticated)
-                {
-                    <li class="nav-item"><a class="nav-link px-2 text-body-secondary" asp-controller="User" asp-action="Login">Acesso Restrito</a></li>            
-                }
-            </ul>
-        </footer>
     </div>
-    
+
+    <footer class="mt-auto">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center py-4 border-top">
+                <p class="mb-2 mb-md-0 text-muted">
+                    &copy; @DateTime.Now.Year <strong>@branding.BusinessName</strong>. Todos os direitos reservados.
+                </p>
+                <div class="d-flex align-items-center gap-3">
+                    @if (!User.Identity!.IsAuthenticated)
+                    {
+                        <a class="text-muted text-decoration-none small" asp-controller="User" asp-action="Login">
+                            <i class="bi bi-lock me-1"></i>Acesso Restrito
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/theme.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+@section Styles {
+    <style>
+        .nav-itens {
+            background-color: red;
+        }
+    </style>
+}

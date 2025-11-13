@@ -9,12 +9,6 @@ body {
 
 .navbar {
     background-color: #0A58CA;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.navbar-brand {
-    font-size: 1.15rem;
-    white-space: nowrap;
 }
 
 .table tbody tr:hover {
@@ -22,33 +16,9 @@ body {
     transition: background-color 0.2s ease-in-out;
 }
 
-.my-appointments-button {
-    font-size: 0.95rem;
-}
-
-@media (max-width: 676px) {
-
+@media (max-width: 676px){
     .navbar-brand {
-        font-size: 1rem;
-    }
-
-    .navbar-collapse {
-        background-color: #0A58CA;
-        border-radius: 0.5rem;
-        padding: 0.5rem 1rem;
-    }
-
-    .my-appointments-button {
-        padding: 4px 8px;
-    }
-
-        .my-appointments-button i {
-            display: none;
-        }
-}
-
-@media (max-width: 380px) {
-    body {
-        padding-top: 112px;
+        font-size: 1.1rem;
     }
 }
+

@@ -1,31 +1,21 @@
-﻿.form-signin {
-    max-width: 330px;
-    padding: 1rem;
+﻿.min-vh-100 {
+    min-height: calc(100vh - 76px);
 }
 
-.form-signin {
-    max-width: 330px;
-    padding: 1rem;
+.form-control.border-start-0 {
+    border-left: none;
 }
 
-    .form-signin .form-floating:focus-within {
-        z-index: 2;
-    }
+.input-group-text.border-end-0 {
+    border-right: none;
+}
 
-    .form-signin input[type="text"] {
-        margin-bottom: -1px;
-        border-bottom-right-radius: 0;
-        border-bottom-left-radius: 0;
-    }
+.form-control:focus + .input-group-text,
+.form-control:focus ~ .input-group-text {
+    border-color: var(--primary);
+}
 
-    .form-signin input[type="password"] {
-        margin-bottom: 10px;
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-    }
-
-span {
-    width: 50px;
-    height: 50px;
-    font-size: 50px;
+.input-group:focus-within .input-group-text {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
 }

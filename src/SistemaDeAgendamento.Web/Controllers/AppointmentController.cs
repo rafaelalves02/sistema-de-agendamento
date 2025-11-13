@@ -8,11 +8,18 @@ using System.Text.RegularExpressions;
 namespace SistemaDeAgendamento.Web.Controllers
 {
     [Route("Appointment")]
-    public class AppointmentController(IAppointmentService appointmentService, IServiceService serviceService, IEmployeeService employeeService) : Controller
+    public class AppointmentController : Controller
     {
-        private readonly IAppointmentService _appointmentService = appointmentService;
-        private readonly IServiceService _serviceService = serviceService;
-        private readonly IEmployeeService _employeeService = employeeService;
+        private readonly IAppointmentService _appointmentService;
+        private readonly IServiceService _serviceService;
+        private readonly IEmployeeService _employeeService;
+
+        public AppointmentController(IAppointmentService appointmentService ,IServiceService serviceService, IEmployeeService employeeService)
+        {
+            _appointmentService = appointmentService;
+            _serviceService = serviceService;
+            _employeeService = employeeService;
+        }
 
         [Route("Create/{serviceId:int}")]
         public IActionResult Create(int serviceId)
@@ -40,20 +47,11 @@ namespace SistemaDeAgendamento.Web.Controllers
 
         [HttpPost("Create/{serviceId:int}")]
 
-        public IActionResult Create(int serviceId, CreateViewModel model)
+        public IActionResult Create(CreateViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 model.Employees = GetEmployeeList();
-                return View(model);
-            }
-
-            if (model.Service!.Id != serviceId)
-            {
-                ModelState.AddModelError(string.Empty, "Dados alterados!");
-
-                model.Employees = GetEmployeeList();
-
                 return View(model);
             }
 
@@ -80,7 +78,7 @@ namespace SistemaDeAgendamento.Web.Controllers
         [Route("Read")]
         public IActionResult Read(ReadViewModel? model)
         {
-            model ??= new ReadViewModel();
+            model = model ?? new ReadViewModel();
 
             var appointments = new List<AppointmentViewModel>();
 
@@ -88,11 +86,11 @@ namespace SistemaDeAgendamento.Web.Controllers
             {
                 var result = _appointmentService.Read();
 
-                appointments = [.. result.Select(r => r.MapToAppointmentViewModel())];
+                appointments = result.Select(r => r.MapToAppointmentViewModel()).ToList();
 
                 if (model.EmployeeId.HasValue)
                 {                  
-                   appointments = [.. appointments.Where(a => a.Employee.Id == model.EmployeeId)];
+                   appointments = appointments.Where(a => a.Employee.Id == model.EmployeeId).ToList();
                 }
 
                 if (!string.IsNullOrWhiteSpace(model.ClientPhoneNumber))
@@ -100,12 +98,12 @@ namespace SistemaDeAgendamento.Web.Controllers
                     var filterDigits = Regex.Replace(model.ClientPhoneNumber, @"\D", "");
                     if (!string.IsNullOrEmpty(filterDigits))
                     {
-                        appointments = [.. appointments.Where(a =>
+                        appointments = appointments.Where(a =>
                         {
                             var clientPhone = a.Client?.PhoneNumber ?? string.Empty;
                             var clientDigits = Regex.Replace(clientPhone, @"\D", "");
                             return clientDigits.Contains(filterDigits);
-                        })];
+                        }).ToList();
                     }
                 }
 
@@ -130,19 +128,19 @@ namespace SistemaDeAgendamento.Web.Controllers
 
                 var result = _appointmentService.GetByEmployeeId(employeeId);
 
-                appointments = [.. result.Select(r => r.MapToAppointmentViewModel())];
+                appointments = result.Select(r => r.MapToAppointmentViewModel()).ToList();
 
                 if (!string.IsNullOrWhiteSpace(model.ClientPhoneNumber))
                 {
                     var filterDigits = Regex.Replace(model.ClientPhoneNumber, @"\D", "");
                     if (!string.IsNullOrEmpty(filterDigits))
                     {
-                        appointments = [.. appointments.Where(a =>
+                        appointments = appointments.Where(a =>
                         {
                             var clientPhone = a.Client?.PhoneNumber ?? string.Empty;
                             var clientDigits = Regex.Replace(clientPhone, @"\D", "");
                             return clientDigits.Contains(filterDigits);
-                        })];
+                        }).ToList();
                     }
                 }
             }
@@ -164,24 +162,24 @@ namespace SistemaDeAgendamento.Web.Controllers
 
                 var result = _appointmentService.GetByClientPhoneNumber(clientPhoneNumber);
 
-                appointments = [.. result.Select(r => r.MapToAppointmentViewModel())];
+                appointments = result.Select(r => r.MapToAppointmentViewModel()).ToList();
 
                 model!.ClientPhoneNumber = clientPhoneNumber;
             }
 
             if (model!.Date.HasValue)
             {
-                appointments = [.. appointments.Where(a => a.StartTime.Date == model.Date.Value.Date)];
+                appointments = appointments.Where(a => a.StartTime.Date == model.Date.Value.Date).ToList();
             }
 
             if (model.ServiceId.HasValue)
             {
-                appointments = [.. appointments.Where(a => a.Service.Id == model.ServiceId.Value)];
+                appointments = appointments.Where(a => a.Service.Id == model.ServiceId.Value).ToList();
             }
 
             if (model.Status.HasValue)
             {
-                appointments = [.. appointments.Where(a => a.Status == model.Status.Value)];
+                appointments = appointments.Where(a => a.Status == model.Status.Value).ToList();
             }
 
             model.Services = GetServiceList();
@@ -209,12 +207,12 @@ namespace SistemaDeAgendamento.Web.Controllers
 
         public List<SelectListItem> GetEmployeeList()
         {
-            return [.. _employeeService.Read().Select(e => new SelectListItem(e.Name, e.Id.ToString()))];
+            return _employeeService.Read().Select(e => new SelectListItem(e.Name, e.Id.ToString())).ToList();
         }
 
         private List<SelectListItem> GetServiceList()
         {
-            return [.. _serviceService.Read().Select(s => new SelectListItem(s.Name, s.Id.ToString()))];
+            return _serviceService.Read().Select(s => new SelectListItem(s.Name, s.Id.ToString())).ToList();
         }
     }
 }

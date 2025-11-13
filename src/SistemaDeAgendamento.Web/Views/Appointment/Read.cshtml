@@ -28,16 +28,16 @@
 }
 
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <div>
-        <h1 class="h3 m-0">Agendamentos</h1>
-    </div>
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+    <h1 class="h3 fw-bold mb-0">
+        <i class="bi bi-calendar-event text-primary me-2"></i>Agendamentos
+    </h1>
     @if (!User.IsInRole("Admin") && !User.IsInRole("Employee"))
     {
-        <div>
-            <a class="btn btn-primary" href="@Url.Action("GetClientPhone", "Appointment")">Procurar por outro Número</a>
-        </div>
-    }          
+        <a class="btn btn-primary w-100 w-md-auto" href="@Url.Action("GetClientPhone", "Appointment")">
+            <i class="bi bi-search me-1"></i>Procurar por outro Número
+        </a>
+    }
 </div>
 
 <div class="filter-card mb-4 shadow-sm rounded-3 border">
@@ -193,17 +193,17 @@ else
 
                     var status = a.Status.ToString();
                     var badgeClass = status == "Completed" ? "bg-success"
-                                   : status == "Scheduled" ? "bg-warning text-dark"
-                                   : status == "Canceled" ? "bg-danger"
-                                   : "bg-secondary";
-                <tr>
-                    @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
-                    {
-                        <td>
-                            <div class="fw-semibold">@a.Client.Name</div>
-                            <div class="text-muted small">@formattedPhone</div>
-                        </td>
-                    }                      
+                    : status == "Scheduled" ? "bg-warning text-dark"
+                    : status == "Canceled" ? "bg-danger"
+                    : "bg-secondary";
+                    <tr>
+                        @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+                        {
+                            <td>
+                                <div class="fw-semibold">@a.Client.Name</div>
+                                <div class="text-muted small">@formattedPhone</div>
+                            </td>
+                        }
                     <td>
                         <div>@a.Service.Name</div>
                         <div class="text-muted small">@formattedDuration • <span class="card-price">@a.Service.Price.ToString("C")</span></div>
@@ -214,13 +214,13 @@ else
                     <td class="status-cell">
                         <span class="badge status-badge @badgeClass">
                             @(a.Status == SistemaDeAgendamento.Web.Models.Appointment.AppointmentStatusViewModel.Completed ? "Finalizado"
-                                : a.Status == SistemaDeAgendamento.Web.Models.Appointment.AppointmentStatusViewModel.Scheduled ? "Pendente"
-                                : "Cancelado")
-                        </span>
-                    </td>
-                    <td class="text-nowrap"><small class="text-muted">@a.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small></td>
-                </tr>
-                }
+                                                    : a.Status == SistemaDeAgendamento.Web.Models.Appointment.AppointmentStatusViewModel.Scheduled ? "Pendente"
+                                                    : "Cancelado")
+                    </span>
+                </td>
+                <td class="text-nowrap"><small class="text-muted">@a.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small></td>
+            </tr>
+                        }
             </tbody>
         </table>
     </div>
@@ -246,24 +246,25 @@ else
 
             if (isClosed) {
                 icon.classList.add("rotate");
-            } else {        
+            } else {
                 icon.classList.remove("rotate");
             }
         }
     </script>
     <style>
         .filter-card {
-            background-color: #fff;
+            background-color: var(--bg-primary);
             transition: box-shadow 0.2s ease-in-out;
         }
 
             .filter-card:hover {
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+                box-shadow: var(--shadow-md);
             }
 
         .filter-header {
             cursor: pointer;
             user-select: none;
+            color: var(--text-primary);
         }
 
         #FilterForm.collapse {
@@ -296,57 +297,15 @@ else
             }
         }
 
-        .appointment-card {
-            border: 1px solid rgba(0,0,0,.05);
-            transition: transform .12s ease, box-shadow .12s ease;
-            border-radius: .6rem;
-            overflow: hidden;
-        }
-
-            .appointment-card:hover {
-                transform: translateY(-6px);
-                box-shadow: 0 10px 30px rgba(13, 110, 253, .08);
-            }
-
-            .appointment-card .card-body {
-                padding: 1rem;
-            }
-
-        .status-badge {
-            font-weight: 600;
-            box-shadow: 0 3px 10px rgba(0,0,0,.06);
-        }
-
-        .appointment-meta {
-            font-size: .9rem;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 3rem 1rem;
-            border: 1px dashed rgba(0,0,0,.06);
-            border-radius: .5rem;
-            background: linear-gradient(180deg, rgba(248,249,250,0.8), rgba(255,255,255,0.4));
-        }
-
-        .card-price {
-            font-weight: 600;
-            color: #0d6efd;
-        }
-
-        .small-muted {
-            color: #6c757d;
-            font-size: .9rem;
-        }
-
-        .table thead th {
-            border-bottom: 2px solid rgba(0,0,0,.04);
-        }
-
         .status-cell .badge {
             min-width: 88px;
             display: inline-block;
             text-align: center;
+        }
+
+        .card-price {
+            font-weight: 600;
+            color: var(--primary);
         }
     </style>
 

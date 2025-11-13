@@ -1,0 +1,50 @@
+@model SistemaDeAgendamento.Web.Models.BrandingOptions
+@{
+    // Função para converter hex para RGB
+    string HexToRgb(string hex)
+    {
+        hex = hex.TrimStart('#');
+        if (hex.Length == 6)
+        {
+            var r = Convert.ToInt32(hex.Substring(0, 2), 16);
+            var g = Convert.ToInt32(hex.Substring(2, 2), 16);
+            var b = Convert.ToInt32(hex.Substring(4, 2), 16);
+            return $"{r}, {g}, {b}";
+        }
+        return "10, 88, 202"; // fallback
+    }
+
+    var primaryRgb = HexToRgb(Model.PrimaryColor);
+}
+
+<style>
+    :root {
+        --brand-primary-color: @Model.PrimaryColor;
+        --brand-secondary-color: @Model.SecondaryColor;
+        --brand-primary-color-rgb: @primaryRgb;
+    }
+
+    .navbar {
+        background: linear-gradient(135deg, var(--brand-primary-color) 0%, var(--brand-secondary-color) 100%) !important;
+    }
+
+    .navbar-collapse {
+        backdrop-filter: blur(20px);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--brand-primary-color) 0%, var(--brand-secondary-color) 100%);
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--brand-secondary-color) 0%, var(--brand-primary-color) 100%);
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+    .table tbody tr:hover {
+        background-color: rgba( @primaryRgb, 0.05);
+    }
+</style>
+

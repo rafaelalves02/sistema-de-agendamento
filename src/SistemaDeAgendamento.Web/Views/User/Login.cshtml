@@ -4,48 +4,84 @@
     ViewData["Title"] = "Login";
 }
 
-<main class="form-signin w-100 m-auto">
-    <form asp-controller="User" asp-action="Login" class="needs-validation" novalidate>
-        <span class="material-symbols-outlined text-primary">
-            cards
-        </span>
-        <h1 class="h3 mb-3 fw-normal">Faça seu login</h1>
-        <div class="form-floating">
-            <input type="text" class="form-control" id="floatingInput" placeholder="Usuário" asp-for="UserName" required>
-            <label for="floatingInput">Usuario</label>
-        </div>
-        <div class="form-floating">
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Senha" asp-for="Password" required>
-            <label for="floatingPassword">Senha</label>
-        </div>
-        <div class="form-check text-start my-3">
-            <input class="form-check-input" type="checkbox" value="remember-me" id="checkDefault" value="true" asp-for="RemerberMe">
-            <label class="form-check-label" for="checkDefault">Lembrar-me</label>
-        </div>
-        <button class="btn btn-primary w-100 py-2" type="submit">Entrar</button>
+<div class="row justify-content-center align-items-center min-vh-100 py-5">
+    <div class="col-12 col-sm-10 col-md-8">
+        <div class="card shadow-lg border-0">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4 w-xl-50 float-xl-start">
+                    <div class="mb-3">
+                        <i class="bi bi-shield-lock-fill text-primary" style="font-size: 3.5rem;"></i>
+                    </div>
+                    <h1 class="h3 fw-bold mb-2">Bem-vindo de volta</h1>
+                    <p class="text-muted mb-0">Faça login para acessar o sistema</p>
+                </div>
 
-        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
-    </form>
-</main>
+                <form asp-controller="User" asp-action="Login" class="needs-validation w-xl-50 float-xl-end" novalidate>
+                    <div class="mb-3">
+                        <label for="floatingInput" class="form-label fw-semibold">
+                            <i class="bi bi-person me-1"></i>Usuário
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-person text-muted"></i>
+                            </span>
+                            <input type="text" class="form-control border-start-0" id="floatingInput"
+                                   placeholder="Digite seu usuário" asp-for="UserName" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="floatingPassword" class="form-label fw-semibold">
+                            <i class="bi bi-lock me-1"></i>Senha
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-lock text-muted"></i>
+                            </span>
+                            <input type="password" class="form-control border-start-0" id="floatingPassword"
+                                   placeholder="Digite sua senha" asp-for="Password" required>
+                        </div>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="checkDefault" value="true" asp-for="RemerberMe">
+                        <label class="form-check-label text-muted" for="checkDefault">
+                            Lembrar-me
+                        </label>
+                    </div>
+
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+                    <button class="btn btn-primary w-100 py-2 fw-semibold mb-3" type="submit">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script>
-         (() => {
+        (() => {
           'use strict'
 
-          // Fetch all the forms we want to apply custom Bootstrap validation styles to
-          const forms = document.querySelectorAll('.needs-validation')
+          document.addEventListener('DOMContentLoaded', () => {
+            const forms = document.querySelectorAll('.needs-validation')
 
-          // Loop over them and prevent submission
-          Array.from(forms).forEach(form => {
-            form.addEventListener('submit', event => {
-              if (!form.checkValidity()) {
-                event.preventDefault()
-                event.stopPropagation()
-              }
+            forms.forEach(form => {
+              form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                  event.preventDefault()
+                  event.stopPropagation()
+                }
 
-              form.classList.add('was-validated')
-            }, false)
+                form.classList.add('was-validated')
+              }, false)
+
+              // Garante que não venha com erro visual ao carregar
+              form.classList.remove('was-validated')
+            })
           })
         })()
     </script>

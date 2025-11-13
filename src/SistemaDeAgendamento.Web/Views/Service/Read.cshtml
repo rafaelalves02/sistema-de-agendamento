@@ -1,94 +1,121 @@
 ﻿@using System.Security.Claims
+@using Microsoft.Extensions.Options
+@inject IOptions<BrandingOptions> BrandingOptions
 @model SistemaDeAgendamento.Web.Models.Service.ReadViewModel;
 
 @{
     ViewData["Title"] = "Serviços";
+    var branding = BrandingOptions.Value;
 }
 
 @if (Model.ShowWelCome == true)
 {
-    <div class="text-center">
-
-        <h1 class="display-4">Seja Bem-Vindo</h1>
-
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold mb-3">
+            Seja Bem-Vindo
+        </h1>
         @if (@User.FindFirst(ClaimTypes.NameIdentifier)?.Value != null)
         {
-            <h2>@User.FindFirst(ClaimTypes.NameIdentifier)?.Value</h2>
+            <h2 class="h4 text-muted">@User.FindFirst(ClaimTypes.NameIdentifier)?.Value</h2>
         }
         else
         {
-            <h2 class="h3 text-secondary">ao sistema de Agendamento</h2>
+            <h2 class="h4 text-muted">ao @branding.BusinessName</h2>
         }
-
-       
     </div>
 }
 
-<h3 class="h2 text-center mt-5 mb-3 text- fw-semibold">Escolha um serviço para agendar:</h3>
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+    <h2 class="h3 fw-bold mb-0">
+        <span class="d-none d-sm-inline">Escolha um serviço para agendar</span>
+        <span class="d-sm-none">Serviços</span>
+    </h2>
+    @if (@User.IsInRole("Admin"))
+    {
+        <a class="btn btn-primary w-100 w-md-auto" asp-controller="Service" asp-action="Create">
+            <i class="bi bi-plus-circle me-1"></i>Novo Serviço
+        </a>
+    }
+</div>
 
-
-@if (@User.IsInRole("Admin"))
-{
-    <div class="py-2">
-        <a class="btn btn-primary mb-3" asp-controller="Service" asp-action="Create">Novo Serviço</a>
-    </div>
-}
 
 @if (Model.Services == null || Model.Services.Count == 0)
 {
-    <p class="card-text">Nenhum serviço cadastrado.</p>
+    <div class="empty-state">
+        <i class="bi bi-briefcase"></i>
+        <h3 class="h5 mt-3 mb-2">Nenhum serviço cadastrado</h3>
+        <p class="text-muted mb-0">Comece adicionando seu primeiro serviço.</p>
+        @if (@User.IsInRole("Admin"))
+        {
+            <a class="btn btn-primary mt-3" asp-controller="Service" asp-action="Create">
+                <i class="bi bi-plus-circle me-1"></i>Adicionar Serviço
+            </a>
+        }
+    </div>
 }
 else if (@User.IsInRole("Admin"))
 {
-    
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="ps-4">Nome</th>
+                            <th scope="col">Preço</th>
+                            <th scope="col">Duração</th>
+                            <th scope="col" class="text-end pe-4">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var service in Model.Services)
+                        {
+                            var totalMinutes = service.DurationInMinutes;
+                            var hours = totalMinutes / 60;
+                            var minutes = totalMinutes % 60;
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">Nome</th>
-                <th scope="col">Preço</th>
-                <th scope="col">Duração</th>
-                <th scope="col"></th>
-                
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var service in Model.Services)
-            {
-                var totalMinutes = service.DurationInMinutes;
-                var hours = totalMinutes / 60;
-                var minutes = totalMinutes % 60;
+                            string formattedDuration;
+                            if (hours == 0)
+                            {
+                                formattedDuration = $"{minutes}min";
+                            }
+                            else if (minutes == 0)
+                            {
+                                formattedDuration = $"{hours}h";
+                            }
+                            else
+                            {
+                                formattedDuration = $"{hours}h {minutes}min";
+                            }
 
-                string formattedDuration;
-                if (hours == 0)
-                {
-                    formattedDuration = $"{minutes}min";
-                }
-                else if (minutes == 0)
-                {
-                    formattedDuration = $"{hours}h";
-                }
-                else
-                {
-                    formattedDuration = $"{hours}h {minutes}min";
-                }
-
-                <tr>
-                    <td>@service.Name</td>
-                    <td>@service.Price.ToString("C")</td>
-                    <td>@formattedDuration</td>
-                    <td>
-                        <a class="btn btn-primary" href="@Url.Action("Edit", "Service", new { id = service.Id })">Editar</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
+                            <tr>
+                                <td class="ps-4 fw-semibold">@service.Name</td>
+                                <td>
+                                    <span class="badge bg-success-subtle text-success">
+                                        <i class="bi bi-currency-dollar me-1"></i>@service.Price.ToString("C")
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="text-muted">
+                                        <i class="bi bi-clock me-1"></i>@formattedDuration
+                                    </span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a class="btn btn-sm btn-outline-primary" href="@Url.Action("Edit", "Service", new { id = service.Id })">
+                                        <i class="bi bi-pencil me-1"></i>Editar
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 }
 else
 {
-    <div class="row">
+    <div class="services-list">
         @foreach (var service in Model.Services)
         {
             var totalMinutes = service.DurationInMinutes;
@@ -109,17 +136,27 @@ else
                 formattedDuration = $"{hours}h {minutes}min";
             }
 
-            <div class="card-container col-md-4 col-sm-6 mb-4">
-                <div class="card shadow-sm h-100 border-0">
-                    <div class="card-body">
-                        <h5 class="card-title fw-semibold text-dark text-uppercase">@service.Name</h5>
-                        <div class="d-flex justify-content-between text-muted mt-2 mb-3">
-                            <span class="text-success price-span"><i class="bi bi-cash-coin me-1"></i>@service.Price.ToString("C")</span>
-                            <span class="text-primary time-span">
-                                <i class="bi bi-clock me-1"></i>@formattedDuration
-                            </span> 
+            <div class="service-item">
+                <div class="service-content">
+                    <div class="service-info">
+                        <h3 class="service-name">@service.Name</h3>
+                        <div class="service-details">
+                            <span class="service-duration">
+                                <i class="bi bi-clock"></i>
+                                @formattedDuration
+                            </span>
+                            <span class="service-separator">•</span>
+                            <span class="service-price">
+                                @service.Price.ToString("C")
+                            </span>
                         </div>
-                        <a href="@Url.Action("Create", "Appointment", new { id = service.Id })" class="btn btn-primary btn-sm w-100"><i class="bi bi-calendar4 me-1"></i>Agendar</a>
+                    </div>
+                    <div class="service-action">
+                        <a href="@Url.Action("Create", "Appointment", new { id = service.Id })"
+                           class="btn btn-primary service-btn">
+                            <i class="bi bi-calendar-check me-1"></i>
+                            Agendar
+                        </a>
                     </div>
                 </div>
             </div>
@@ -156,5 +193,5 @@ else
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/Service/Read.css"/>
+    <link rel="stylesheet" href="~/css/Service/Read.css" />
 }

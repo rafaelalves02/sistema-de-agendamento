@@ -1,34 +1,84 @@
 ﻿@model SistemaDeAgendamento.Web.Models.Service.CreateViewModel;
 
 @{
-    ViewData["Title"] = "Novo Serviço - ";
+    ViewData["Title"] = "Novo Serviço";
 }
 
-<h1>Novo Serviço</h1>
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <a href="@Url.Action("Read", "Service")" class="btn btn-outline-secondary btn-sm me-2">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <h1 class="h3 fw-bold mb-0">
+                <i class="bi bi-plus-circle text-primary me-2"></i>Novo Serviço
+            </h1>
+        </div>
 
-<form class="row g-3 needs-validation" asp-controller="Service" asp-action="Create" id="serviceForm" novalidate>
-    <div class="col-md-12">
-        <label for="inputName" class="form-label">Nome:</label>
-        <input type="text" class="form-control" id="inputName" asp-for="Name" required>
-    </div>
-    <div class="col-md-6">
-        <label for="inputPrice" class="form-label">Preço:</label>
-        <input type="text" id="preco" class="form-control" placeholder="R$ 0,00" asp-for="Price">
-    </div>
-    <div class="col-6">
-        <label for="inputDuration" class="form-label">Duração(em minutos):</label>
-        <input type="number" class="form-control" id="inputDuratio" asp-for="DurationInMinutes" placeholder="Duração em minutos" required>
-    </div>
-   
-    <div class="col-12">
-        <button type="submit" class="btn btn-primary">Salvar</button>
-        <a class="btn btn-secondary" href="@Url.Action("Cancel", "Service")">Cancelar</a>
-    </div>
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <form class="row g-4 needs-validation" asp-controller="Service" asp-action="Create" id="serviceForm" novalidate>
+                    <div class="col-12">
+                        <label for="inputName" class="form-label fw-semibold">
+                            <i class="bi bi-tag me-1 text-primary"></i>Nome do Serviço
+                        </label>
+                        <input type="text" class="form-control form-control-lg" id="inputName"
+                               asp-for="Name" placeholder="Ex: Corte de Cabelo" required>
+                        <div class="invalid-feedback">
+                            Por favor, digite o nome do serviço.
+                        </div>
+                    </div>
 
+                    <div class="col-md-6">
+                        <label for="inputPrice" class="form-label fw-semibold">
+                            <i class="bi bi-currency-dollar me-1 text-success"></i>Preço
+                        </label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-light">
+                                <i class="bi bi-currency-dollar text-muted"></i>
+                            </span>
+                            <input type="text" id="preco" class="form-control"
+                                   placeholder="R$ 0,00" asp-for="Price" required>
+                        </div>
+                        <div class="invalid-feedback">
+                            Por favor, digite o preço do serviço.
+                        </div>
+                    </div>
 
-    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    <div class="col-md-6">
+                        <label for="inputDuration" class="form-label fw-semibold">
+                            <i class="bi bi-clock me-1 text-info"></i>Duração (minutos)
+                        </label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-light">
+                                <i class="bi bi-clock text-muted"></i>
+                            </span>
+                            <input type="number" class="form-control" id="inputDuratio"
+                                   asp-for="DurationInMinutes" placeholder="Ex: 60" min="1" required>
+                            <span class="input-group-text bg-light">min</span>
+                        </div>
+                        <div class="invalid-feedback">
+                            Por favor, digite a duração em minutos.
+                        </div>
+                    </div>
 
-</form>
+                    @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
+
+                    <div class="col-12 pt-3 border-top">
+                        <div class="d-flex gap-2 justify-content-end">
+                            <a class="btn btn-outline-secondary" href="@Url.Action("Read", "Service")">
+                                <i class="bi bi-x-circle me-1"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle me-1"></i>Salvar Serviço
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script>
@@ -70,8 +120,8 @@
 
         form.addEventListener('submit', e => {
           let rawValue = inputPreco.value
-            .replace(/[^\d,]/g, '') 
-            .replace(/\./g, ''); 
+            .replace(/[^\d,]/g, '')
+            .replace(/\./g, '');
 
           inputPreco.value = rawValue;
         });
