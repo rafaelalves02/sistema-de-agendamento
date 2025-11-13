@@ -24,23 +24,13 @@ namespace SistemaDeAgendamento.Services
     }
 
 
-    public class AppointmentService : IAppointmentService
+    public class AppointmentService(IAppointmentRepository appointmentRepository, IAvailabilityRepository availabilityRepository, IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, IClientRepository clientRepository) : IAppointmentService
     {
-        private readonly IAppointmentRepository _appointmentRepository;
-        private readonly IAvailabilityRepository _availabilityRepository;
-        private readonly IServiceRepository _serviceRepository;
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly IClientRepository _clientRepository;
-
-        public AppointmentService(IAppointmentRepository appointmentRepository, IAvailabilityRepository availabilityRepository, IServiceRepository serviceRepository, IEmployeeRepository employeeRepository, IClientRepository clientRepository)
-        {
-            _appointmentRepository = appointmentRepository;
-            _availabilityRepository = availabilityRepository;
-            _serviceRepository = serviceRepository;
-            _employeeRepository = employeeRepository;
-            _clientRepository = clientRepository;
-        }
-
+        private readonly IAppointmentRepository _appointmentRepository = appointmentRepository;
+        private readonly IAvailabilityRepository _availabilityRepository = availabilityRepository;
+        private readonly IServiceRepository _serviceRepository = serviceRepository;
+        private readonly IEmployeeRepository _employeeRepository = employeeRepository;
+        private readonly IClientRepository _clientRepository = clientRepository;
 
         public IList<TimeSpan> GetAvailableSlots(int employeeId, DateTime date, int serviceDuration)
         {
@@ -164,7 +154,7 @@ namespace SistemaDeAgendamento.Services
 
             var appointments = _appointmentRepository.Read();
 
-            result = appointments.Select(a => a.MapToAppointmentResult()).ToList();
+            result = [.. appointments.Select(a => a.MapToAppointmentResult())];
 
             return result;
         }
@@ -175,7 +165,7 @@ namespace SistemaDeAgendamento.Services
 
             var appointments = _appointmentRepository.GetByEmployeeId(employeeId);
 
-            result = appointments.Select(a => a.MapToAppointmentResult()).ToList();
+            result = [.. appointments.Select(a => a.MapToAppointmentResult())];
 
             return result;
         }
@@ -186,7 +176,7 @@ namespace SistemaDeAgendamento.Services
 
             var appointments = _appointmentRepository.GetByClientPhoneNumber(phoneNumber);
 
-            result = appointments.Select(a => a.MapToAppointmentResult()).ToList();
+            result = [.. appointments.Select(a => a.MapToAppointmentResult())];
 
             return result;
         }

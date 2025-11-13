@@ -9,6 +9,12 @@ body {
 
 .navbar {
     background-color: #0A58CA;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.navbar-brand {
+    font-size: 1.15rem;
+    white-space: nowrap;
 }
 
 .table tbody tr:hover {
@@ -16,27 +22,33 @@ body {
     transition: background-color 0.2s ease-in-out;
 }
 
-@media (max-width: 676px){
+.my-appointments-button {
+    font-size: 0.95rem;
+}
+
+@media (max-width: 676px) {
+
     .navbar-brand {
-        font-size: 1.1rem;
-    }
-}
-
-/*.btn-primary {
-    background-color: #000 !important;
-    border-color: #000 !important;
-}
-
-    .btn-primary:hover,
-    .btn-primary:focus {
-        background-color: #222 !important;
-        border-color: #222 !important;
+        font-size: 1rem;
     }
 
-.text-primary {
-    color: #000 !important;
+    .navbar-collapse {
+        background-color: #0A58CA;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .my-appointments-button {
+        padding: 4px 8px;
+    }
+
+        .my-appointments-button i {
+            display: none;
+        }
 }
 
-.bg-primary {
-    background-color: #000 !important;
-}*/
+@media (max-width: 380px) {
+    body {
+        padding-top: 112px;
+    }
+}

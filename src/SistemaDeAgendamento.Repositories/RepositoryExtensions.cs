@@ -43,7 +43,11 @@ namespace SistemaDeAgendamento.Repositories
 
         public static bool GetBoolean(this SqlDataReader reader, string name)
         {
-            return reader.GetBoolean(reader.GetOrdinal(name));
+            int index = reader.GetOrdinal(name);
+            if (reader.IsDBNull(index))
+                return false;
+
+            return Convert.ToByte(reader.GetValue(index)) != 0;
         }
 
         public static TimeSpan GetTimeSpan(this SqlDataReader reader, string name)

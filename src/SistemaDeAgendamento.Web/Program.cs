@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Localization;
 using SistemaDeAgendamento.Repositories;
 using SistemaDeAgendamento.Services;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,8 +28,8 @@ builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 var databaseProvider = builder.Configuration["DatabaseProvider"]?.ToLower() ?? "mysql";
 
 // Connection strings devem ser configuradas via variáveis de ambiente por segurança
-var mysqlConnectionString = builder.Configuration.GetConnectionString("SistemaDeAgendamentoMySQLConnectionString"); 
-var sqlServerConnectionString = builder.Configuration.GetConnectionString("SistemaDeAgendamentoSQLServerConnectionString");
+var mysqlConnectionString = builder.Configuration.GetConnectionString("MySqlConnection"); 
+var sqlServerConnectionString = builder.Configuration.GetConnectionString("SqlServerConnection");
 
 // Registrar repositórios baseado no DatabaseProvider
 if (databaseProvider == "sqlserver")
@@ -63,10 +65,21 @@ else // mysql (padrão)
     builder.Services.AddScoped<IServiceRepository, ServiceRepository>(c => new ServiceRepository(mysqlConnectionString));
     builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>(c => new AppointmentRepository(mysqlConnectionString));
 }
-    
+
+var cultureInfo = new CultureInfo("pt-BR");
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 var app = builder.Build();
 
+var localizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture(cultureInfo),
+    SupportedCultures = [cultureInfo],
+    SupportedUICultures = [cultureInfo]
+};
+
+app.UseRequestLocalization(localizationOptions);
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
